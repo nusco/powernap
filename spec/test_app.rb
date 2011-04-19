@@ -1,4 +1,4 @@
-require_relative "../lib/powernap"
+require_relative '../lib/powernap'
 
 class Book
   include PowerNap::Resource

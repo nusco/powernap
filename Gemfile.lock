@@ -19,6 +19,8 @@ GEM
       tzinfo (~> 0.3.22)
       will_paginate (~> 3.0.pre)
     rack (1.2.2)
+    rack-test (0.5.7)
+      rack (>= 1.0)
     rspec (2.5.0)
       rspec-core (~> 2.5.0)
       rspec-expectations (~> 2.5.0)
@@ -40,5 +42,6 @@ PLATFORMS
 DEPENDENCIES
   bson_ext
   mongoid
+  rack-test
   rspec
   sinatra

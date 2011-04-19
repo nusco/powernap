@@ -1,6 +1,11 @@
+desc "Start app"
+task :start do
+  system "bundle exec rackup"
+end
+
 desc "Run tests"
-task :tests do
+task :test do
   system "bundle exec rspec spec/"
 end
 
-task :default => :tests
+task :default => :start

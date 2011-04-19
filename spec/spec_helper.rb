@@ -1,9 +1,9 @@
-require "bundler/setup"
+require 'bundler/setup'
 
-require "mongoid"
-require "rspec"
+require 'mongoid'
+require 'rspec'
 
-require "mongo"
+require 'mongo'
 begin
   Mongo::Connection.new('localhost', 27017).close
 rescue Mongo::ConnectionFailure
@@ -18,5 +18,8 @@ rescue Mongo::ConnectionFailure
   puts "=================================================================="
   exit
 end
+
+require 'rack/test'
+ENV['RACK_ENV'] = 'test'
 
 require 'test_app'
