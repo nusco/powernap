@@ -6,5 +6,5 @@ gem 'bson_ext'
 
 group :test do
   gem 'rspec'
-  gem 'rack-test'
+  gem "rack-test", :git => 'git://github.com/nusco/rack-test.git'
 end

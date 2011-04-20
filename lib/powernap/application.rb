@@ -2,7 +2,7 @@ require 'sinatra/base'
 
 module PowerNap
   APPLICATION = Sinatra.new do
-    get '/' do
+    options '/' do
       'Hello world!'
     end
   end

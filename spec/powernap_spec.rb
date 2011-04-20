@@ -7,8 +7,8 @@ describe 'A PowerNap app' do
     @app ||= PowerNap::APPLICATION
   end
   
-  it 'should return 404 on an unknown resource' do
-    get '/whatever'
-    last_response.status.should == 404
+  it 'should support OPTIONS on *' do
+    options '/'
+    last_response.should be_ok
   end
 end
