@@ -10,7 +10,7 @@ describe PowerNap::Resource do
   end
 
   it 'should not respond to undeclared HTTP methods' do
-    Book.http_methods.should_not include :delete
+    Book.http_methods.should_not include :post
   end
 
   it 'could respond to no HTTP methods at all' do

@@ -32,11 +32,12 @@ describe PowerNap do
       JSON.parse(last_response.body)['title'].should == "Metaprogramming Ruby"
     end
 
-    it 'should understand PUT and GET' do
+    it 'should understand DELETE' do
       put '/books', '{"title": "Metaprogramming Ruby"}'
       id = last_response.body
+      delete "/books/#{id}"
       get "/books/#{id}"
-      JSON.parse(last_response.body)['title'].should == "Metaprogramming Ruby"
+      last_response.status.should == 404
     end
     
     it 'should return 200 for OK' do
@@ -46,17 +47,27 @@ describe PowerNap do
       last_response.status.should == 200
     end
     
-    it 'should return 404 for Not Found' do
+    it 'should return 404 for URL Not Found' do
+      get "/books/whatever/123"
+      last_response.status.should == 404
+    end
+    
+    it 'should return 404 for resource type Not Found' do
       get "/dogs/12345"
+      last_response.status.should == 404
+    end
+    
+    it 'should return 404 for resource Not Found' do
+      get "/books/4daf5306c788e1d106000001"
       last_response.status.should == 404
     end
     
     it 'should return 405 for Method Not Allowed' do
       put '/books', '{"title": "Metaprogramming Ruby"}'
       id = last_response.body
-      delete "/books/#{id}"
+      post "/books/#{id}"
       last_response.status.should == 405
-      # TODO: add Allowed header
+      # TODO: test for Allowed header (from HTTP specs)
     end
   end
 end

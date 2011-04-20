@@ -23,8 +23,8 @@ module PowerNap
         @http_methods ||= []
       end
 
-      def responds_to(*methods)
-        @http_methods = methods
+      def responds_to(*http_methods)
+        @http_methods = http_methods
       end
     end
   end

@@ -2,36 +2,42 @@ require 'sinatra/base'
 
 module PowerNap
   APPLICATION = Sinatra.new do
-    def special_case?(resource, http_method)
-      resource_class = PowerNap.resources.find {|r| r.name.downcase.pluralize == resource }
-      unless resource_class
-        status 404
-        return nil
+    def access(resource, http_method)
+      res_class = PowerNap.resources.find {|r| r.name.downcase.pluralize == resource }
+      unless res_class
+        status 404; return
       end
-      unless resource_class.http_methods.include?(http_method)
-        status 405
-        return nil
+      unless res_class.http_methods.include?(http_method)
+        status 405; return
       end
-      resource_class
-    end
-    
-    put '/:resource' do |resource|
-      resource_class = special_case?(resource, :put)
-      return unless resource_class
-
-      resource_class.create(JSON.parse(request.body.read)).id.to_s
+      yield res_class
     end
 
     get '/:resource/:id' do |resource, id|
-      resource_class = special_case?(resource, :get)
-      return unless resource_class
-
-      resource_class.find(id).to_json
+      access resource, :get do |res_class|
+        begin
+          res_class.find(id).to_json
+        rescue
+          status 404
+        end          
+      end
+    end
+    
+    put '/:resource' do |resource|
+      access resource, :put do |res_class|
+        res_class.create(JSON.parse(request.body.read)).id.to_s
+      end
     end
     
     delete '/:resource/:id' do |resource, id|
-      resource_class = special_case?(resource, :delete)
-      return unless resource_class
+      access resource, :delete do |res_class|
+        res_class.find(id).delete
+      end
+    end
+    
+    post '/:resource/:id' do |resource, id|
+      access resource, :post do |res_class|
+      end
     end
 
     options %r{\*} do; end
