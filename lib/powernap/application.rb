@@ -16,7 +16,7 @@ module PowerNap
     get '/:resource/:id' do |resource, id|
       access resource, :get do |res_class|
         begin
-          res_class.find(id).to_json
+          res_class.get(id)
         rescue
           status 404
         end          
@@ -25,13 +25,13 @@ module PowerNap
     
     put '/:resource' do |resource|
       access resource, :put do |res_class|
-        res_class.create(JSON.parse(request.body.read)).id.to_s
+        res_class.put(request.body.read)
       end
     end
     
     delete '/:resource/:id' do |resource, id|
       access resource, :delete do |res_class|
-        res_class.find(id).delete
+        res_class.delete(id)
       end
     end
     

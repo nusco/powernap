@@ -19,6 +19,18 @@ module PowerNap
     end
 
     module HttpMethods
+      def get(id)
+        find(id).to_json
+      end
+
+      def put(json)
+        create(JSON.parse(json)).id.to_s
+      end
+      
+      def delete(id)
+        find(id).delete
+      end
+      
       def http_methods
         @http_methods ||= []
       end
