@@ -17,7 +17,7 @@ describe PowerNap::Resource do
     Book.http_methods.should include :get, :put, :post, :delete
   end
   
-  it 'should also a Mongoid document' do
+  it 'should also be a Mongoid document' do
     Book.ancestors.should include Mongoid::Document
   end
 end

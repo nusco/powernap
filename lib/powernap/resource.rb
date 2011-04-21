@@ -1,5 +1,3 @@
-require 'mongoid'
-
 module PowerNap
   class << self
     def resources
@@ -14,26 +12,11 @@ module PowerNap
   module Resource
     def self.included(base)
       PowerNap.register base
-      base.extend HttpMethods
-      base.send :include, Mongoid::Document
+      base.extend ClassMethods
+      base.send :include, PowerNap::PersistentResource
     end
 
-    module HttpMethods
-      def get(id)
-        find(id).to_json
-      end
-
-      def put(new_resource)
-        create(JSON.parse(new_resource)).id.to_s
-      end
-      
-      def delete(id)
-        find(id).delete
-      end
-      
-      def post()
-      end
-      
+    module ClassMethods
       def http_methods
         @http_methods ||= [:get, :post, :put, :delete]
       end
