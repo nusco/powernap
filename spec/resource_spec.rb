@@ -21,6 +21,15 @@ describe PowerNap::Resource do
   it 'should respond to all HTTP methods by default' do
     Book.http_methods.should include :get, :put, :post, :delete
   end
+
+  it "should have the default HTTP methods" do
+    id = Book.put '{"title": "Metaprogramming Ruby"}'
+    Book.get(id).should_not be_nil
+  end
+  
+  it 'can override HTTP methods' do
+    Book.post.should == "override"
+  end
   
   it 'should also be a Mongoid document' do
     Book.ancestors.should include Mongoid::Document

@@ -16,7 +16,7 @@ module PowerNap
 
     module ClassMethods
       def http_methods
-        @http_methods ||= [:get, :post, :put, :delete]
+        @http_methods ||= [:get, :put, :delete, :post]
       end
 
       def only_responds_to(*http_methods)
