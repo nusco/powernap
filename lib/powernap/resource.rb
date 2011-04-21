@@ -24,7 +24,7 @@ module PowerNap
       end
 
       def get(id)
-        find(id).to_json
+        find(id)
       end
 
       def put(new_resource)

@@ -7,6 +7,7 @@ gem 'bson_ext'
 group :test do
   gem 'rspec'
   gem "rack-test", :git => 'git://github.com/nusco/rack-test.git'
+  gem 'nokogiri'
 end
 
 group :development do

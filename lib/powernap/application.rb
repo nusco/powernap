@@ -1,7 +1,11 @@
 require 'sinatra/base'
+require 'erb'
 
 module PowerNap
   APPLICATION = Sinatra.new do
+
+    set :views, File.dirname(__FILE__) + '/views'
+
     def access(resource, http_method)
       res_class = PowerNap.resource_classes.find {|r| r.name.downcase.pluralize == resource }
       unless res_class
@@ -17,9 +21,23 @@ module PowerNap
       end          
     end
 
+    get '/:resource/:id.:representation' do |resource, id, representation|
+      access resource, :get do |res_class|
+        @resource = res_class.get(id)
+        case representation
+        when 'html'
+          erb :resource
+        when 'json'
+          @resource.to_json
+        else
+          status 404
+        end
+      end
+    end
+
     get '/:resource/:id' do |resource, id|
       access resource, :get do |res_class|
-        res_class.get(id)
+        res_class.get(id).to_json
       end
     end
     

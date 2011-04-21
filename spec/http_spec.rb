@@ -7,7 +7,7 @@ describe PowerNap do
     PowerNap::APPLICATION
   end
 
-  describe 'A service' do
+  describe 'An HTTP service' do
     it 'should support OPTIONS on *' do
       options '*'
       last_response.should be_ok
@@ -19,17 +19,48 @@ describe PowerNap do
     end
   end
 
-  describe 'A resource' do
+  describe 'An HTTP resource' do
     before :each do
       Book.delete_all
       Author.delete_all
     end
+    
+    describe 'GET' do      
+      before :each do
+        put '/books', '{"title": "Metaprogramming Ruby"}'
+        @id = last_response.body
+      end
+      
+      it 'should get the resource as JSON by default' do
+        get "/books/#{@id}"
+        JSON.parse(last_response.body)['title'].should == "Metaprogramming Ruby"
+      end
+      
+      it 'should get the resource as JSON' do
+        get "/books/#{@id}.json"
+        JSON.parse(last_response.body)['title'].should == "Metaprogramming Ruby"
+      end
+      
+      it 'can get the resource as XHTML' do
+        get "/books/#{@id}.html"
+        require 'nokogiri'
+        last_response.body.should include "<p>Metaprogramming Ruby</p>"
 
+        # TODO
+        #Nokogiri::XML(last_response.body).xpath(boh).should == 'Metaprogramming Ruby'
+      end
+      
+      it 'should return a 404 for unknown extensions' do
+        get "/books/#{@id}.txt"
+        last_response.status.should == 404
+      end
+    end
+    
     it 'should understand PUT and GET' do
       put '/books', '{"title": "Metaprogramming Ruby"}'
       id = last_response.body
       get "/books/#{id}"
-      JSON.parse(last_response.body)['title'].should == "Metaprogramming Ruby"
+      last_response.status.should == 200
     end
 
     it 'should understand DELETE' do
