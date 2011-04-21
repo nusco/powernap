@@ -14,7 +14,7 @@ describe PowerNap::Resource do
   end
 
   it 'should respond to all HTTP methods by default' do
-    Empty.http_methods.should include :get, :put, :post, :delete
+    Book.http_methods.should include :get, :put, :post, :delete
   end
   
   it 'should also a Mongoid document' do
