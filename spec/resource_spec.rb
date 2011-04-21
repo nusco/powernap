@@ -1,8 +1,13 @@
 require 'spec_helper'
 
 describe PowerNap::Resource do
+  before :each do
+    Book.delete_all
+    Author.delete_all
+  end
+
   it 'should be registered' do
-    PowerNap.resources.should include Book 
+    PowerNap.resource_classes.should include Book 
   end
 
   it 'should respond to HTTP methods declared in only_responds_to' do

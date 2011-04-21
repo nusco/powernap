@@ -1,19 +1,17 @@
+require 'mongoid'
+
 module PowerNap
   class << self
-    def resources
-      @resources ||= []
-    end
-
-    def register(resource)
-      resources << resource
+    def resource_classes
+      @resource_classes ||= []
     end
   end
 
   module Resource
     def self.included(base)
-      PowerNap.register base
+      PowerNap.resource_classes << base
+      base.send :include, ::Mongoid::Document
       base.extend ClassMethods
-      base.send :include, PowerNap::PersistentResource
     end
 
     module ClassMethods
@@ -23,6 +21,21 @@ module PowerNap
 
       def only_responds_to(*http_methods)
         @http_methods = http_methods
+      end
+
+      def get(id)
+        find(id).to_json
+      end
+
+      def put(new_resource)
+        create(JSON.parse(new_resource)).id.to_s
+      end
+
+      def delete(id)
+        find(id).delete
+      end
+
+      def post()
       end
     end
   end

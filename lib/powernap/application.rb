@@ -3,7 +3,7 @@ require 'sinatra/base'
 module PowerNap
   APPLICATION = Sinatra.new do
     def access(resource, http_method)
-      res_class = PowerNap.resources.find {|r| r.name.downcase.pluralize == resource }
+      res_class = PowerNap.resource_classes.find {|r| r.name.downcase.pluralize == resource }
       unless res_class
         status 404; return
       end
