@@ -5,16 +5,16 @@ describe PowerNap::Resource do
     PowerNap.resources.should include Book 
   end
 
-  it 'should respond to declared HTTP methods' do
-    Book.http_methods.should include :get, :put
+  it 'should respond to HTTP methods declared in only_responds_to' do
+    Author.http_methods.should include :get, :put
   end
 
-  it 'should not respond to undeclared HTTP methods' do
-    Book.http_methods.should_not include :post
+  it 'should not respond to HTTP methods not declared in only_responds_to' do
+    Author.http_methods.should_not include :post
   end
 
-  it 'could respond to no HTTP methods at all' do
-    Empty.http_methods.should be_empty
+  it 'should respond to all HTTP methods by default' do
+    Empty.http_methods.should include :get, :put, :post, :delete
   end
   
   it 'should also a Mongoid document' do

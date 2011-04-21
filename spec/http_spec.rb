@@ -39,6 +39,11 @@ describe PowerNap do
       get "/books/#{id}"
       last_response.status.should == 404
     end
+
+    it 'should understand POST' do
+      post '/books'
+      last_response.status.should == 200
+    end
     
     it 'should return 200 for OK' do
       put '/books', '{"title": "Metaprogramming Ruby"}'
@@ -63,9 +68,9 @@ describe PowerNap do
     end
     
     it 'should return 405 for Method Not Allowed' do
-      put '/books', '{"title": "Metaprogramming Ruby"}'
+      put '/authors', '{"name": "Nusco"}'
       id = last_response.body
-      post "/books/#{id}"
+      post "/authors"
       last_response.status.should == 405
       # TODO: test for Allowed header (from HTTP specs)
     end

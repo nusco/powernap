@@ -10,16 +10,16 @@ module PowerNap
       unless res_class.http_methods.include?(http_method)
         status 405; return
       end
-      yield res_class
+      begin
+        yield res_class
+      rescue Mongoid::Errors::DocumentNotFound
+        status 404
+      end          
     end
 
     get '/:resource/:id' do |resource, id|
       access resource, :get do |res_class|
-        begin
-          res_class.get(id)
-        rescue
-          status 404
-        end          
+        res_class.get(id)
       end
     end
     
@@ -35,8 +35,9 @@ module PowerNap
       end
     end
     
-    post '/:resource/:id' do |resource, id|
+    post '/:resource' do |resource|
       access resource, :post do |res_class|
+        res_class.post
       end
     end
 

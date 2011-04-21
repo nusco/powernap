@@ -3,7 +3,7 @@ require_relative '../lib/powernap'
 class Book
   include PowerNap::Resource
 
-  responds_to :get, :put, :delete
+  only_responds_to :get, :put, :delete, :post
 
   field :title, type: String
 end
@@ -11,7 +11,7 @@ end
 class Author
   include PowerNap::Resource
 
-  responds_to :get, :put
+  only_responds_to :get, :put
 
   field :name, type: String
 end

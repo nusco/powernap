@@ -23,19 +23,22 @@ module PowerNap
         find(id).to_json
       end
 
-      def put(json)
-        create(JSON.parse(json)).id.to_s
+      def put(new_resource)
+        create(JSON.parse(new_resource)).id.to_s
       end
       
       def delete(id)
         find(id).delete
       end
       
+      def post()
+      end
+      
       def http_methods
-        @http_methods ||= []
+        @http_methods ||= [:get, :post, :put, :delete]
       end
 
-      def responds_to(*http_methods)
+      def only_responds_to(*http_methods)
         @http_methods = http_methods
       end
     end
