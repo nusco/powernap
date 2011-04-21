@@ -11,11 +11,11 @@ describe PowerNap::Resource do
   end
 
   it 'should respond to HTTP methods declared in only_responds_to' do
-    Author.http_methods.should include :get, :put
+    Author.http_methods.should include :get, :post
   end
 
   it 'should not respond to HTTP methods not declared in only_responds_to' do
-    Author.http_methods.should_not include :post
+    Author.http_methods.should_not include :put
   end
 
   it 'should respond to all HTTP methods by default' do
@@ -23,12 +23,12 @@ describe PowerNap::Resource do
   end
 
   it "should have the default HTTP methods" do
-    id = Book.put '{"title": "Metaprogramming Ruby"}'
+    id = Book.post '{"title": "Metaprogramming Ruby"}'
     Book.get(id).should_not be_nil
   end
   
   it 'can override HTTP methods' do
-    Book.post.should == "override"
+    Author.post.should == "override"
   end
   
   it 'should also be a Mongoid document' do

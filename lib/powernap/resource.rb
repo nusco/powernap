@@ -27,15 +27,16 @@ module PowerNap
         find(id)
       end
 
-      def put(new_resource)
+      def post(new_resource)
         create(JSON.parse(new_resource)).id.to_s
+      end
+
+      def put(id, resource)
+        find(id).update_attributes!(JSON.parse(resource).to_hash)
       end
 
       def delete(id)
         find(id).delete
-      end
-
-      def post()
       end
     end
   end

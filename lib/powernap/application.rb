@@ -41,9 +41,9 @@ module PowerNap
       end
     end
     
-    put '/:resource' do |resource|
-      access resource, :put do |res_class|
-        res_class.put(request.body.read)
+    post '/:resource' do |new_resource|
+      access new_resource, :put do |res_class|
+        res_class.post(request.body.read)
       end
     end
     
@@ -53,9 +53,9 @@ module PowerNap
       end
     end
     
-    post '/:resource' do |resource|
+    put '/:resource/:id' do |resource, id|
       access resource, :post do |res_class|
-        res_class.post
+        res_class.put(id, request.body.read)
       end
     end
 

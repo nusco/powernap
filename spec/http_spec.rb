@@ -27,7 +27,7 @@ describe PowerNap do
     
     describe 'GET' do      
       before :each do
-        put '/books', '{"title": "Metaprogramming Ruby"}'
+        post '/books', '{"title": "Metaprogramming Ruby"}'
         @id = last_response.body
       end
       
@@ -56,28 +56,34 @@ describe PowerNap do
       end
     end
     
-    it 'should understand PUT and GET' do
-      put '/books', '{"title": "Metaprogramming Ruby"}'
+    describe "PUT" do
+      it 'should update an existing resource' do
+        post '/books', '{"title": "Metaprogramming Ruby"}'
+        id = last_response.body
+        put "/books/#{id}", '{"title": "Rails Recipes"}'
+        last_response.status.should == 200
+        get "/books/#{id}"
+        JSON.parse(last_response.body)['title'].should == "Rails Recipes"
+      end
+    end
+    
+    it 'should understand POST and GET' do
+      post '/books', '{"title": "Metaprogramming Ruby"}'
       id = last_response.body
       get "/books/#{id}"
       last_response.status.should == 200
     end
 
     it 'should understand DELETE' do
-      put '/books', '{"title": "Metaprogramming Ruby"}'
+      post '/books', '{"title": "Metaprogramming Ruby"}'
       id = last_response.body
       delete "/books/#{id}"
       get "/books/#{id}"
       last_response.status.should == 404
     end
-
-    it 'should understand POST' do
-      post '/books'
-      last_response.status.should == 200
-    end
     
     it 'should return 200 for OK' do
-      put '/books', '{"title": "Metaprogramming Ruby"}'
+      post '/books', '{"title": "Metaprogramming Ruby"}'
       id = last_response.body
       get "/books/#{id}"
       last_response.status.should == 200
@@ -99,7 +105,7 @@ describe PowerNap do
     end
     
     it 'should return 405 for Method Not Allowed' do
-      put '/authors', '{"name": "Nusco"}'
+      post '/authors', '{"name": "Nusco"}'
       id = last_response.body
       post "/authors"
       last_response.status.should == 405
