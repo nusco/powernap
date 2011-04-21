@@ -9,11 +9,15 @@ end
 class Author
   include PowerNap::Resource
 
-  only_responds_to :get, :post
+  only_responds_to :post
 
   field :name, type: String
+end
 
-  def self.post
+class Library
+  include PowerNap::Resource
+
+  def self.get
     'override'
   end
 end

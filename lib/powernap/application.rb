@@ -30,6 +30,7 @@ module PowerNap
         when 'json'
           @resource.to_json
         else
+          # FIXME: use Illegal Representation here?
           status 404
         end
       end
@@ -42,20 +43,20 @@ module PowerNap
     end
     
     post '/:resource' do |new_resource|
-      access new_resource, :put do |res_class|
+      access new_resource, :post do |res_class|
         res_class.post(request.body.read)
+      end
+    end
+    
+    put '/:resource/:id' do |resource, id|
+      access resource, :put do |res_class|
+        res_class.put(id, request.body.read)
       end
     end
     
     delete '/:resource/:id' do |resource, id|
       access resource, :delete do |res_class|
         res_class.delete(id)
-      end
-    end
-    
-    put '/:resource/:id' do |resource, id|
-      access resource, :post do |res_class|
-        res_class.put(id, request.body.read)
       end
     end
 
