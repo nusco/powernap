@@ -85,7 +85,7 @@ describe PowerNap do
     end
 
     describe "accessed with POST" do
-      it 'should create a new resource' do
+      it 'should create a new resource and return its id in the body' do
         post '/books', '{"title": "Metaprogramming Ruby"}'
         id = last_response.body
         get "/books/#{id}"
@@ -166,6 +166,39 @@ describe PowerNap do
 
       it 'should return 404 for resource type Not Found' do
         delete "/dogs/12345"
+        last_response.status.should == 404
+      end
+    end
+
+    describe 'accessed with OPTIONS' do
+      before :each do
+        post '/authors', '{"name": "Paolo Perrotta"}'
+        @id = last_response.body
+      end
+
+      it 'should return allowed in the Allow header field' do
+        options "/authors/#{@id}"
+        last_response.status.should == 200 # REMOVEME
+        last_response.headers['Allow'].should == 'POST, PUT'
+      end
+
+      it 'should return 200 for OK' do
+        options "/authors/#{@id}"
+        last_response.status.should == 200
+      end
+
+      it 'should return 404 for URL Not Found' do
+        options "/authors/whatever/123"
+        last_response.status.should == 404
+      end
+
+      it 'should return 404 for resource Not Found' do
+        options "/authors/4daf5306c788e1d106000001"
+        last_response.status.should == 404
+      end
+
+      it 'should return 404 for resource type Not Found' do
+        options "/dogs/12345"
         last_response.status.should == 404
       end
     end

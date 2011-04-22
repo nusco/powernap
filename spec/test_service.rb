@@ -9,7 +9,7 @@ end
 class Author
   include PowerNap::Resource
 
-  only_responds_to :post
+  only_responds_to :post, :put
 
   field :name, type: String
 end
