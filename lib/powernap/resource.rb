@@ -28,7 +28,7 @@ module PowerNap
       end
 
       def get(id)
-        find(id)
+        _find(id)
       end
 
       def post(new_resource)
@@ -36,11 +36,17 @@ module PowerNap
       end
 
       def put(id, resource)
-        find(id).update_attributes!(JSON.parse(resource).to_hash)
+        _find(id).update_attributes!(JSON.parse(resource).to_hash)
       end
 
       def delete(id)
-        find(id).delete
+        _find(id).delete
+      end
+      
+      def _find(id)
+        find(id)
+      rescue Mongoid::Errors::DocumentNotFound
+        raise 404
       end
     end
   end

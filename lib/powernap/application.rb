@@ -20,7 +20,7 @@ module PowerNap
       end
       begin
         yield res_class
-      rescue Mongoid::Errors::DocumentNotFound
+      rescue
         status 404
       end          
     end
