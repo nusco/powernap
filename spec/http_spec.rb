@@ -135,6 +135,14 @@ describe PowerNap do
         put "/dogs/12345", '{"title": "Rails Recipes"}'
         last_response.status.should == 404
       end
+      
+      it 'should return an Allow field when there is one in the request' do
+        post '/authors', '{"name": "Paolo Perrotta"}'
+        id = last_response.body
+        header 'Allow', 'GET, POST'
+        put "/authors/#{id}", '{"name": "Paolo Nusco Perrotta"}'
+        last_response.headers['Allow'].should == 'POST, PUT'
+      end
     end
 
     describe 'accessed with DELETE' do
@@ -178,7 +186,6 @@ describe PowerNap do
 
       it 'should return allowed in the Allow header field' do
         options "/authors/#{@id}"
-        last_response.status.should == 200 # REMOVEME
         last_response.headers['Allow'].should == 'POST, PUT'
       end
 

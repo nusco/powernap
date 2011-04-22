@@ -14,7 +14,7 @@ module PowerNap
       if [:get, :post, :put, :delete].include?(http_method)
         unless res_class.http_methods.include?(http_method)
           status 405
-          headers 'Allow' => res_class.http_methods.map {|m| m.upcase }.join(', ')
+          headers 'Allow' => res_class.http_methods_as_string
           return
         end
       end
@@ -55,6 +55,8 @@ module PowerNap
     put '/:resource/:id' do |resource, id|
       access resource, :put do |res_class|
         res_class.put(id, request.body.read)
+        # FIXME: this sucks. find a decent way to access Rack request headers (or fix Rack)
+        headers 'Allow' => res_class.http_methods_as_string if request.env['HTTP_ALLOW']
       end
     end
     
@@ -66,7 +68,8 @@ module PowerNap
 
     options '/:resource/:id' do |resource, id|
       access resource, :options do |res_class|
-        headers 'Allow' => res_class.get(id).allowed_http_methods
+        res_class.get(id) # check that the resource does exist
+        headers 'Allow' => res_class.http_methods_as_string
       end
     end
     
