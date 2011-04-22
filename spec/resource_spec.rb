@@ -11,11 +11,11 @@ describe PowerNap::Resource do
   end
 
   it 'should respond to HTTP methods declared in only_responds_to' do
-    Author.http_methods.should include :get, :post
+    Author.http_methods.should include :post
   end
 
   it 'should not respond to HTTP methods not declared in only_responds_to' do
-    Author.http_methods.should_not include :put
+    Author.http_methods.should_not include :get
   end
 
   it 'should respond to all HTTP methods by default' do
