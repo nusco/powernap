@@ -104,22 +104,68 @@ describe PowerNap do
     end    
     
     describe 'accessed with PUT' do
-      it 'should update an existing resource' do
+      before :each do
         post '/books', '{"title": "Metaprogramming Ruby"}'
-        id = last_response.body
-        put "/books/#{id}", '{"title": "Rails Recipes"}'
+        @id = last_response.body
+      end
+      
+      it 'should update an existing resource' do
+        put "/books/#{@id}", '{"title": "Rails Recipes"}'
         last_response.status.should == 200
-        get "/books/#{id}"
+        get "/books/#{@id}"
         JSON.parse(last_response.body)['title'].should == "Rails Recipes"
+      end
+  
+      it 'should return 200 for OK' do
+        put "/books/#{@id}", '{"title": "Rails Recipes"}'
+        last_response.status.should == 200
+      end
+  
+      it 'should return 404 for URL Not Found' do
+        put "/books/whatever/123", '{"title": "Rails Recipes"}'
+        last_response.status.should == 404
+      end
+  
+      it 'should return 404 for resource Not Found' do
+        put "/books/4daf5306c788e1d106000001", '{"title": "Rails Recipes"}'
+        last_response.status.should == 404
+      end
+  
+      it 'should return 404 for resource type Not Found' do
+        put "/dogs/12345", '{"title": "Rails Recipes"}'
+        last_response.status.should == 404
       end
     end
 
     describe 'accessed with DELETE' do
-      it 'should remove a resource' do
+      before :each do
         post '/books', '{"title": "Metaprogramming Ruby"}'
-        id = last_response.body
-        delete "/books/#{id}"
-        get "/books/#{id}"
+        @id = last_response.body
+      end
+
+      it 'should remove a resource' do
+        delete "/books/#{@id}"
+        get "/books/#{@id}"
+        last_response.status.should == 404
+      end
+
+      it 'should return 200 for OK' do
+        delete "/books/#{@id}"
+        last_response.status.should == 200
+      end
+
+      it 'should return 404 for URL Not Found' do
+        delete "/books/whatever/123"
+        last_response.status.should == 404
+      end
+
+      it 'should return 404 for resource Not Found' do
+        delete "/books/4daf5306c788e1d106000001"
+        last_response.status.should == 404
+      end
+
+      it 'should return 404 for resource type Not Found' do
+        delete "/dogs/12345"
         last_response.status.should == 404
       end
     end
