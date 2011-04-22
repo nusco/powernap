@@ -30,7 +30,7 @@ describe PowerNap do
       id = last_response.body
       get "/authors/#{id}"
       last_response.status.should == 405
-      # TODO: test for Allowed header (from HTTP specs)
+      last_response.headers['Allow'].should == 'POST, PUT'
     end
     
     describe 'accessed with GET' do      

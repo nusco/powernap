@@ -13,7 +13,9 @@ module PowerNap
       end
       if [:get, :post, :put, :delete].include?(http_method)
         unless res_class.http_methods.include?(http_method)
-          status 405; return
+          status 405
+          headers 'Allow' => res_class.http_methods.map {|m| m.upcase }.join(', ')
+          return
         end
       end
       begin
@@ -64,9 +66,7 @@ module PowerNap
 
     options '/:resource/:id' do |resource, id|
       access resource, :options do |res_class|
-        res_class.get(id).to_json # check that the resource exists
-        methods = res_class.http_methods
-        headers 'Allow' => methods.map {|m| m.upcase }.join(', ')
+        headers 'Allow' => res_class.get(id).allowed_http_methods
       end
     end
     

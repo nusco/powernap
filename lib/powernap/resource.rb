@@ -14,6 +14,10 @@ module PowerNap
       base.extend ClassMethods
     end
 
+    def allowed_http_methods
+      self.class.http_methods.map {|m| m.upcase }.join(', ')
+    end    
+
     module ClassMethods
       def http_methods
         @http_methods ||= [:get, :put, :delete, :post]
