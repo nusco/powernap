@@ -48,6 +48,7 @@ module PowerNap
     
     post '/:resource' do |new_resource|
       access new_resource, :post do |res_class|
+        status 201
         res_class.post(request.body.read)
       end
     end

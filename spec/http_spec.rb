@@ -92,9 +92,9 @@ describe PowerNap do
         last_response.status.should == 200
       end
 
-      it 'should return 200 for OK' do
+      it 'should return 201 for Created' do
         post '/books', '{"title": "Metaprogramming Ruby"}'
-        last_response.status.should == 200
+        last_response.status.should == 201
       end
     
       it 'should return 404 for URL Not Found' do
