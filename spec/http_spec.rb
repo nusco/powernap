@@ -209,5 +209,42 @@ describe PowerNap do
         last_response.status.should == 404
       end
     end
+    
+    describe 'accessed with HEAD' do      
+      before :each do
+        post '/books', '{"title": "Metaprogramming Ruby"}'
+        @id = last_response.body
+      end
+      
+      it 'should get an empty body' do
+        head "/books/#{@id}.json"
+        last_response.body.should be_empty
+      end
+
+      it 'should return 200 for OK' do
+        head "/books/#{@id}"
+        last_response.status.should == 200
+      end
+      
+      it 'should return a 404 for unknown extensions' do
+        head "/books/#{@id}.txt"
+        last_response.status.should == 404
+      end
+    
+      it 'should return 404 for URL Not Found' do
+        head "/books/whatever/123"
+        last_response.status.should == 404
+      end
+    
+      it 'should return 404 for resource Not Found' do
+        head "/books/4daf5306c788e1d106000001"
+        last_response.status.should == 404
+      end
+    
+      it 'should return 404 for resource type Not Found' do
+        head "/dogs/12345"
+        last_response.status.should == 404
+      end
+    end
   end
 end
