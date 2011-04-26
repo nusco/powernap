@@ -6,6 +6,9 @@ module PowerNap
 
     set :views, File.dirname(__FILE__) + '/views'
 
+    require 'rack/content_length'
+    use Rack::ContentLength
+
     def access(resource, http_method)
       res_class = PowerNap.resource_classes.find {|r| r.name.downcase.pluralize == resource }
       unless res_class

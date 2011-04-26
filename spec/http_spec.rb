@@ -63,9 +63,9 @@ describe PowerNap do
         last_response.status.should == 200
       end
       
-      it 'should return a 404 for unknown extensions' do
+      it 'should return a Content-Length header' do
         get "/books/#{@id}.txt"
-        last_response.status.should == 404
+        last_response.content_length.should == last_response.body.size
       end
     
       it 'should return 404 for URL Not Found' do
@@ -226,6 +226,13 @@ describe PowerNap do
         last_response.status.should == 200
       end
       
+      it 'should return the same Content-Length as a GET' do
+        get "/books/#{@id}.txt"
+        content_length = last_response.content_length
+        head "/books/#{@id}.txt"
+        last_response.content_length.should == content_length
+      end
+      
       it 'should return a 404 for unknown extensions' do
         head "/books/#{@id}.txt"
         last_response.status.should == 404
@@ -235,7 +242,7 @@ describe PowerNap do
         head "/books/whatever/123"
         last_response.status.should == 404
       end
-    
+
       it 'should return 404 for resource Not Found' do
         head "/books/4daf5306c788e1d106000001"
         last_response.status.should == 404
