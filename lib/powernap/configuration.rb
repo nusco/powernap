@@ -1,4 +1,5 @@
 require 'mongoid'
+
 begin
   Mongo::Connection.new('localhost', 27017).close
 rescue Mongo::ConnectionFailure
