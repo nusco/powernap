@@ -10,8 +10,6 @@ module PowerNap
   module Resource
     def self.included(base)
       PowerNap.resource_classes << base
-      # FIXME: something here is maybe defining a method_missing which
-      # makes *any* class method callable - fix it
       base.send :include, ::Mongoid::Document
       base.extend ClassMethods
     end
@@ -25,7 +23,7 @@ module PowerNap
     end
 
     def delete
-      super.delete
+      super
     end
 
     module ClassMethods
