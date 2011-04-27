@@ -13,6 +13,18 @@ module PowerNap
       base.send :include, ::Mongoid::Document
       base.extend ClassMethods
     end
+    
+    def get
+      self
+    end
+
+    def put(resource)
+      update_attributes!(JSON.parse(resource).to_hash)
+    end
+
+    def delete
+      super.delete
+    end
 
     module ClassMethods
       def http_methods
@@ -27,23 +39,11 @@ module PowerNap
         @http_methods = http_methods
       end
 
-      def get(id)
-        _find(id)
-      end
-
       def post(new_resource)
         create(JSON.parse(new_resource)).id.to_s
       end
-
-      def put(id, resource)
-        _find(id).update_attributes!(JSON.parse(resource).to_hash)
-      end
-
-      def delete(id)
-        _find(id).delete
-      end
       
-      def _find(id)
+      def [](id)
         find(id)
       rescue Mongoid::Errors::DocumentNotFound
         raise 404

@@ -30,7 +30,7 @@ module PowerNap
 
     get '/:resource/:id.:representation' do |resource, id, representation|
       access resource, :get do |res_class|
-        @resource = res_class.get(id)
+        @resource = res_class[id].get
         case representation
         when 'html'
           erb :resource
@@ -45,7 +45,7 @@ module PowerNap
 
     get '/:resource/:id' do |resource, id|
       access resource, :get do |res_class|
-        res_class.get(id).to_json
+        res_class[id].get.to_json
       end
     end
     
@@ -58,7 +58,7 @@ module PowerNap
     
     put '/:resource/:id' do |resource, id|
       access resource, :put do |res_class|
-        res_class.put(id, request.body.read)
+        res_class[id].put(request.body.read)
         # FIXME: this sucks. find a decent way to access Rack request headers (or fix Rack)
         headers 'Allow' => res_class.http_methods_as_string if request.env['HTTP_ALLOW']
       end
@@ -66,13 +66,13 @@ module PowerNap
     
     delete '/:resource/:id' do |resource, id|
       access resource, :delete do |res_class|
-        res_class.delete(id)
+        res_class[id].delete
       end
     end
 
     options '/:resource/:id' do |resource, id|
       access resource, :options do |res_class|
-        res_class.get(id) # check that the resource does exist
+        res_class[id] # check that the resource does exist
         headers 'Allow' => res_class.http_methods_as_string
       end
     end

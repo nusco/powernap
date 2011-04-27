@@ -15,7 +15,7 @@ describe PowerNap do
 
     it 'should not support OPTIONS on random URLs' do
       options 'whatever'
-      last_response.status.should == 404 
+      last_response.status.should == 404
     end
   end
 

@@ -24,7 +24,7 @@ describe PowerNap::Resource do
 
   it "should have the default HTTP methods" do
     id = Book.post '{"title": "Metaprogramming Ruby"}'
-    Book.get(id).should_not be_nil
+    Book[id].get.should_not be_nil
   end
   
   it 'can override HTTP methods' do
