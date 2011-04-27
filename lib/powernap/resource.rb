@@ -10,6 +10,8 @@ module PowerNap
   module Resource
     def self.included(base)
       PowerNap.resource_classes << base
+      # FIXME: something here is maybe defining a method_missing which
+      # makes *any* class method callable - fix it
       base.send :include, ::Mongoid::Document
       base.extend ClassMethods
     end
@@ -27,16 +29,16 @@ module PowerNap
     end
 
     module ClassMethods
-      def http_methods
-        @http_methods ||= [:get, :put, :delete, :post]
+      def allowed_methods
+        @allowed_methods ||= [:get, :post, :put, :delete]
       end
 
-      def http_methods_as_string
-        http_methods.map {|m| m.upcase }.join(', ')
+      def allowed_methods_as_string
+        allowed_methods.map {|m| m.upcase }.join(', ')
       end
       
-      def only_responds_to(*http_methods)
-        @http_methods = http_methods
+      def responds_to(*http_methods)
+        @allowed_methods = http_methods
       end
 
       def post(new_resource)

@@ -184,7 +184,7 @@ describe PowerNap do
         @id = last_response.body
       end
 
-      it 'should return allowed in the Allow header field' do
+      it 'should return allowed methods in the Allow header field' do
         options "/authors/#{@id}"
         last_response.headers['Allow'].should == 'POST, PUT'
       end

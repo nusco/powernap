@@ -10,16 +10,16 @@ describe PowerNap::Resource do
     PowerNap.resource_classes.should include Book 
   end
 
-  it 'should respond to HTTP methods declared in only_responds_to' do
-    Author.http_methods.should include :post
+  it 'should respond to HTTP methods declared in responds_to' do
+    Author.allowed_methods.should include :post
   end
 
-  it 'should not respond to HTTP methods not declared in only_responds_to' do
-    Author.http_methods.should_not include :get
+  it 'should not respond to HTTP methods not declared in responds_to' do
+    Author.allowed_methods.should_not include :get
   end
 
   it 'should respond to all HTTP methods by default' do
-    Book.http_methods.should include :get, :put, :post, :delete
+    Book.allowed_methods.should include :get, :post, :put, :delete
   end
 
   it "should have the default HTTP methods" do
