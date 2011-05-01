@@ -31,6 +31,10 @@ describe PowerNap::Resource do
     Library.get.should == "override"
   end
   
+  it 'should have a root URL' do
+    Book.url == "/books"
+  end
+  
   it 'should also be a Mongoid document' do
     Book.ancestors.should include Mongoid::Document
   end

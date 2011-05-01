@@ -25,7 +25,7 @@ module PowerNap
     def delete
       super
     end
-
+    
     module ClassMethods
       def allowed_methods
         @allowed_methods ||= [:get, :post, :put, :delete]
@@ -41,6 +41,10 @@ module PowerNap
 
       def post(new_resource)
         create(JSON.parse(new_resource)).id.to_s
+      end
+      
+      def url
+        name.downcase.pluralize
       end
       
       def [](id)
