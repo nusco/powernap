@@ -33,6 +33,13 @@ describe PowerNap do
       last_response.headers['Allow'].should == 'POST, PUT'
     end
     
+    it 'should respect URLs set by the user' do
+      post '/comments', '{"text": "A good read"}'
+      id = last_response.body
+      get "/comments/#{id}"
+      last_response.status.should == 200
+    end
+    
     describe 'accessed with GET' do      
       before :each do
         post '/books', '{"title": "Metaprogramming Ruby"}'
@@ -77,7 +84,7 @@ describe PowerNap do
         get "/books/4daf5306c788e1d106000001"
         last_response.status.should == 404
       end
-    
+
       it 'should return 404 for resource type Not Found' do
         get "/dogs/12345"
         last_response.status.should == 404

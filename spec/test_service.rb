@@ -14,6 +14,16 @@ class Author
   field :name, type: String
 end
 
+class Comment
+  include PowerNap::Resource
+
+#  def self.url
+#    'my_comments'
+#  end
+  
+  field :text, type: String
+end
+
 class Library
   include PowerNap::Resource
 
