@@ -26,8 +26,4 @@ describe PowerNap::Resource do
   it 'can override HTTP methods' do
     Library.get.should == "override"
   end
-  
-  it 'should also be a Mongoid document' do
-    Book.ancestors.should include Mongoid::Document
-  end
 end

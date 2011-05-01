@@ -4,6 +4,7 @@ require 'erb'
 module PowerNap
   def self.resource(resource_class, args = {})
     url = args[:at] || resource_class.default_url
+    resource_class.extend PowerNap::Resource::ClassMethods
     PowerNap::APPLICATION.expose resource_class, url
     PowerNap::APPLICATION.expose_collection resource_class, url
   end
@@ -90,12 +91,12 @@ module PowerNap
 
       get "/#{url}.:representation" do |representation|
         access resource_class, :get do
-          @resources = resource_class.all
           case representation
           when 'html'
+            @resources = resource_class.all
             erb :collection
           when 'json'
-            @resources.to_json
+            resource_class.all.to_json
           else
             # FIXME: use Illegal Representation here?
             status 404

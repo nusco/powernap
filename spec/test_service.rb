@@ -1,14 +1,14 @@
 require_relative '../lib/powernap'
 
 class Book
-  include PowerNap::Resource
+  include PowerNap::Mongoid
   
   field :title, type: String
 end
 PowerNap.resource Book
 
 class Author
-  include PowerNap::Resource
+  include PowerNap::Mongoid
 
   private :get, :delete
   
@@ -21,14 +21,14 @@ end
 PowerNap.resource Author
 
 class Review
-  include PowerNap::Resource
+  include PowerNap::Mongoid
 
   field :text, type: String
 end
 PowerNap.resource Review, :at => 'my/smart_reviews'
 
 class Library
-  include PowerNap::Resource
+  include PowerNap::Mongoid
 
   def self.get
     'override'
