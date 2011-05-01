@@ -16,6 +16,13 @@ class Author
 end
 PowerNap.resource Author
 
+class Review
+  include PowerNap::Resource
+
+  field :text, type: String
+end
+PowerNap.resource Review, :at => 'my/smart_reviews'
+
 class Comment
   include PowerNap::Resource
 
