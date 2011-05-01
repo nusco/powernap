@@ -21,7 +21,9 @@ module PowerNap
     
     module ClassMethods
       def allowed_methods
-        @allowed_methods ||= [:get, :post, :put, :delete]
+        @allowed_methods ||= ((self.public_instance_methods & [:get, :put, :delete]) +
+                              (self.public_methods & [:post])
+                             ).sort
       end
 
       def allowed_methods_as_string
@@ -30,10 +32,6 @@ module PowerNap
       
       def default_url
         name.downcase.pluralize
-      end
-      
-      def responds_to(*http_methods)
-        @allowed_methods = http_methods
       end
 
       def post(new_resource)

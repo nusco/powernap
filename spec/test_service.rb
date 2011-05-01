@@ -10,8 +10,8 @@ PowerNap.resource Book
 class Author
   include PowerNap::Resource
 
-  responds_to :post, :put
-
+  private :get, :delete
+  
   field :name, type: String
 end
 PowerNap.resource Author

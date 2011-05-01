@@ -74,7 +74,6 @@ module PowerNap
         end
       end
       
-      
       post "/#{url}" do 
         access resource_class, :post do
           status 201
