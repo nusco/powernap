@@ -3,7 +3,7 @@ require 'erb'
 
 module PowerNap
   def self.resource(resource_class, args = {})
-    url = args[:at] || resource_class.name.downcase.pluralize
+    url = args[:at] || resource_class.default_url
     PowerNap::APPLICATION.expose resource_class, url
   end
   

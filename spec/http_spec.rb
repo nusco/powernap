@@ -33,11 +33,14 @@ describe PowerNap do
       last_response.headers['Allow'].should == 'POST, PUT'
     end
     
+    it 'should generate default URLs' do
+      post '/books', '{"title": "Metaprogramming Ruby"}'
+      last_response.status.should == 201
+    end
+    
     it 'should respect URLs set by the user' do
       post '/my/smart_reviews', '{"text": "A good read"}'
-      id = last_response.body
-      get "/my/smart_reviews/#{id}"
-      last_response.status.should == 200
+      last_response.status.should == 201
     end
     
     describe 'accessed with GET' do      

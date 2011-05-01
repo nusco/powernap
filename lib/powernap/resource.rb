@@ -28,6 +28,10 @@ module PowerNap
         allowed_methods.map {|m| m.upcase }.join(', ')
       end
       
+      def default_url
+        name.downcase.pluralize
+      end
+      
       def responds_to(*http_methods)
         @allowed_methods = http_methods
       end

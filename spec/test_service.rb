@@ -23,13 +23,6 @@ class Review
 end
 PowerNap.resource Review, :at => 'my/smart_reviews'
 
-class Comment
-  include PowerNap::Resource
-
-  field :text, type: String
-end
-PowerNap.resource Comment, :at => 'my/smart_comments'
-
 class Library
   include PowerNap::Resource
 
