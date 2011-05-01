@@ -13,25 +13,25 @@ module PowerNap
 
     require 'rack/content_length'
     use Rack::ContentLength
+
+    def access(res_class, http_method)
+      if [:get, :post, :put, :delete].include?(http_method)
+        unless res_class.allowed_methods.include?(http_method)
+          status 405
+          headers 'Allow' => res_class.allowed_methods_as_string
+          return
+        end
+      end
+      begin
+        yield
+      rescue
+        status 404
+      end
+    end
     
     options %r{\*} do; end
     
     def self.expose(resource_class, url)
-      def access(res_class, http_method)
-        if [:get, :post, :put, :delete].include?(http_method)
-          unless res_class.allowed_methods.include?(http_method)
-            status 405
-            headers 'Allow' => res_class.allowed_methods_as_string
-            return
-          end
-        end
-        begin
-          yield
-        rescue
-          status 404
-        end          
-      end
-
       get "/#{url}/:id.:representation" do |id, representation|
         access resource_class, :get do
           @resource = resource_class[id].get
