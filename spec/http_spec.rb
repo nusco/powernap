@@ -7,6 +7,8 @@ describe PowerNap do
     PowerNap::APPLICATION
   end
 
+  # TODO: replace @id with id when appropriate
+
   describe 'An HTTP service' do
     it 'should support OPTIONS on *' do
       options '*'
@@ -95,20 +97,32 @@ describe PowerNap do
     end
 
     describe "accessed with POST" do
-      it 'should create a new resource and return its id in the body' do
-        post '/books', '{"title": "Metaprogramming Ruby"}'
+      it 'should do whatever the post method specifies' do
+        post '/authors', '{"name": "Nusco"}'
         id = last_response.body
-        get "/books/#{id}"
-        last_response.status.should == 200
-      end
-
-      it 'should return 201 for Created' do
-        post '/books', '{"title": "Metaprogramming Ruby"}'
-        last_response.status.should == 201
+        post "/authors/#{id}", 'Hello'
+        last_response.body.should == 'Hello, Nusco!'
       end
     
+      it 'should return 200 for OK' do
+        post '/authors', '{"name": "Nusco"}'
+        id = last_response.body
+        post "/authors/#{id}", 'Hello'
+        last_response.status.should == 200
+      end
+      
       it 'should return 404 for URL Not Found' do
         post "/books/whatever/123"
+        last_response.status.should == 404
+      end
+    
+      it 'should return 404 for resource Not Found' do
+        post "/books/4daf5306c788e1d106000001"
+        last_response.status.should == 404
+      end
+
+      it 'should return 404 for resource type Not Found' do
+        post "/dogs/12345"
         last_response.status.should == 404
       end
     end    
@@ -263,5 +277,70 @@ describe PowerNap do
         last_response.status.should == 404
       end
     end
+  end
+
+  describe 'An HTTP resource collection' do
+    before :each do
+      Book.delete_all
+    end
+    
+    describe 'accessed with GET' do      
+      before :each do
+        post '/books', '{"title": "Metaprogramming Ruby"}'
+      end
+      
+      it 'should get a list of resources as JSON when accessed without an extension' do
+        get "/books"
+        JSON.parse(last_response.body)[0]['title'].should == "Metaprogramming Ruby"
+      end
+      
+      it 'should get the resource as JSON' do
+        get "/books.json"
+        JSON.parse(last_response.body)[0]['title'].should == "Metaprogramming Ruby"
+      end
+      
+      it 'should get the resource as XHTML' do
+        get "/books.html"
+        require 'nokogiri'
+        last_response.body.should include "<p>Metaprogramming Ruby</p>"
+
+        # TODO
+        #Nokogiri::XML(last_response.body).xpath(boh).should == 'Metaprogramming Ruby'
+      end
+    
+      it 'should return 200 for OK' do
+        get "/books"
+        last_response.status.should == 200
+      end
+      
+      it 'should return a Content-Length header' do
+        get "/books"
+        last_response.content_length.should == last_response.body.size
+      end
+    
+      it 'should return 404 for resource Not Found' do
+        get "/books/4daf5306c788e1d106000001"
+        last_response.status.should == 404
+      end
+    end
+    
+    describe "accessed with POST" do
+      it 'should create a new resource and return its id in the body' do
+        post '/books', '{"title": "Metaprogramming Ruby"}'
+        id = last_response.body
+        get "/books/#{id}"
+        last_response.status.should == 200
+      end
+
+      it 'should return 201 for Created' do
+        post '/books', '{"title": "Metaprogramming Ruby"}'
+        last_response.status.should == 201
+      end
+
+      it 'should return 404 for URL Not Found' do
+        post "/books/whatever/123"
+        last_response.status.should == 404
+      end
+    end    
   end
 end

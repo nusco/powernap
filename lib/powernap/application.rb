@@ -5,10 +5,10 @@ module PowerNap
   def self.resource(resource_class, args = {})
     url = args[:at] || resource_class.default_url
     PowerNap::APPLICATION.expose resource_class, url
+    PowerNap::APPLICATION.expose_collection resource_class, url
   end
   
   APPLICATION = Sinatra.new do
-
     set :views, File.dirname(__FILE__) + '/views'
 
     require 'rack/content_length'
@@ -67,14 +67,43 @@ module PowerNap
         end
       end
 
+      post "/#{url}/:id" do |id|
+        access resource_class, :post do
+          resource_class[id].post(request.body.read)
+        end
+      end
+
       options "/#{url}/:id" do |id|
         access resource_class, :options do
           resource_class[id] # check that the resource does exist
           headers 'Allow' => resource_class.allowed_methods_as_string
         end
       end
-      
-      post "/#{url}" do 
+    end
+    
+    def self.expose_collection(resource_class, url)
+      get "/#{url}" do
+        access resource_class, :get do
+          resource_class.all.to_json
+        end
+      end
+
+      get "/#{url}.:representation" do |representation|
+        access resource_class, :get do
+          @resources = resource_class.all
+          case representation
+          when 'html'
+            erb :collection
+          when 'json'
+            @resources.to_json
+          else
+            # FIXME: use Illegal Representation here?
+            status 404
+          end
+        end
+      end
+
+      post "/#{url}" do
         access resource_class, :post do
           status 201
           resource_class.post(request.body.read)

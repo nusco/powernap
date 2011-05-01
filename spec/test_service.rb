@@ -12,6 +12,10 @@ class Author
 
   private :get, :delete
   
+  def post(body)
+    "#{body}, #{name}!"
+  end
+  
   field :name, type: String
 end
 PowerNap.resource Author

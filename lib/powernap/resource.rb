@@ -37,6 +37,10 @@ module PowerNap
       def post(new_resource)
         create(JSON.parse(new_resource)).id.to_s
       end
+
+      def all
+        super
+      end
       
       def [](id)
         find(id)
