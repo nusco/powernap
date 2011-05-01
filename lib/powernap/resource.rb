@@ -1,17 +1,11 @@
 require 'mongoid'
 
 module PowerNap
-  class << self
-    def resource_classes
-      @resource_classes ||= []
-    end
-  end
-
   module Resource
     def self.included(base)
-      PowerNap.resource_classes << base
       base.send :include, ::Mongoid::Document
       base.extend ClassMethods
+      PowerNap::APPLICATION.define_urls_for base
     end
     
     def get

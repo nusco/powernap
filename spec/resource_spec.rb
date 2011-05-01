@@ -6,10 +6,6 @@ describe PowerNap::Resource do
     Author.delete_all
   end
 
-  it 'should be registered' do
-    PowerNap.resource_classes.should include Book 
-  end
-
   it 'should respond to HTTP methods declared in responds_to' do
     Author.allowed_methods.should include :post
   end
@@ -32,7 +28,7 @@ describe PowerNap::Resource do
   end
   
   it 'should have a root URL' do
-    Book.url == "/books"
+    Book.url.should == "books"
   end
   
   it 'should also be a Mongoid document' do
