@@ -34,9 +34,9 @@ describe PowerNap do
     end
     
     it 'should respect URLs set by the user' do
-      post '/comments', '{"text": "A good read"}'
+      post '/my/smart_comments', '{"text": "A good read"}'
       id = last_response.body
-      get "/comments/#{id}"
+      get "/my/smart_comments/#{id}"
       last_response.status.should == 200
     end
     

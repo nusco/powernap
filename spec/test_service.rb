@@ -5,6 +5,7 @@ class Book
   
   field :title, type: String
 end
+PowerNap.resource Book
 
 class Author
   include PowerNap::Resource
@@ -13,16 +14,14 @@ class Author
 
   field :name, type: String
 end
+PowerNap.resource Author
 
 class Comment
   include PowerNap::Resource
 
-#  def self.url
-#    'my_comments'
-#  end
-  
   field :text, type: String
 end
+PowerNap.resource Comment, :at => 'my/smart_comments'
 
 class Library
   include PowerNap::Resource
@@ -31,3 +30,4 @@ class Library
     'override'
   end
 end
+PowerNap.resource Library

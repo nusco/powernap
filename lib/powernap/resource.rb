@@ -5,7 +5,6 @@ module PowerNap
     def self.included(base)
       base.send :include, ::Mongoid::Document
       base.extend ClassMethods
-      PowerNap::APPLICATION.define_urls_for base
     end
     
     def get
@@ -35,10 +34,6 @@ module PowerNap
 
       def post(new_resource)
         create(JSON.parse(new_resource)).id.to_s
-      end
-      
-      def url
-        name.downcase.pluralize
       end
       
       def [](id)

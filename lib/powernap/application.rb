@@ -2,6 +2,11 @@ require 'sinatra/base'
 require 'erb'
 
 module PowerNap
+  def self.resource(resource_class, args = {})
+    url = args[:at] || resource_class.name.downcase.pluralize
+    PowerNap::APPLICATION.expose resource_class, url
+  end
+  
   APPLICATION = Sinatra.new do
 
     set :views, File.dirname(__FILE__) + '/views'
@@ -11,7 +16,7 @@ module PowerNap
     
     options %r{\*} do; end
     
-    def self.define_urls_for(resource_class)
+    def self.expose(resource_class, url)
       def access(res_class, http_method)
         if [:get, :post, :put, :delete].include?(http_method)
           unless res_class.allowed_methods.include?(http_method)
@@ -27,7 +32,7 @@ module PowerNap
         end          
       end
 
-      get "/#{resource_class.url}/:id.:representation" do |id, representation|
+      get "/#{url}/:id.:representation" do |id, representation|
         access resource_class, :get do
           @resource = resource_class[id].get
           case representation
@@ -42,13 +47,13 @@ module PowerNap
         end
       end
 
-      get "/#{resource_class.url}/:id" do |id|
+      get "/#{url}/:id" do |id|
         access resource_class, :get do
           resource_class[id].get.to_json
         end
       end
       
-      put "/#{resource_class.url}/:id" do |id|
+      put "/#{url}/:id" do |id|
          access resource_class, :put do
           resource_class[id].put(request.body.read)
           # FIXME: this sucks. find a decent way to access Rack request headers (or fix Rack)
@@ -56,13 +61,13 @@ module PowerNap
         end
       end
       
-      delete "/#{resource_class.url}/:id" do |id|
+      delete "/#{url}/:id" do |id|
         access resource_class, :delete do
           resource_class[id].delete
         end
       end
 
-      options "/#{resource_class.url}/:id" do |id|
+      options "/#{url}/:id" do |id|
         access resource_class, :options do
           resource_class[id] # check that the resource does exist
           headers 'Allow' => resource_class.allowed_methods_as_string
@@ -70,7 +75,7 @@ module PowerNap
       end
       
       
-      post "/#{resource_class.url}" do 
+      post "/#{url}" do 
         access resource_class, :post do
           status 201
           resource_class.post(request.body.read)
