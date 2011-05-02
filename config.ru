@@ -1,2 +1,2 @@
-require './spec/test_service'
+require './spec/memory/service'
 run PowerNap::APPLICATION

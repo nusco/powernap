@@ -1,4 +1,4 @@
-require_relative '../lib/powernap'
+require './lib/powernap'
 
 class Book
   include PowerNap::Mongoid
@@ -25,8 +25,6 @@ PowerNap.resource Author
 class Review
   include PowerNap::Mongoid
   include Mongoid::Document
-
-  field :text, type: String
 end
 PowerNap.resource Review, :at => 'my/smart_reviews'
 

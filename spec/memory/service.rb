@@ -1,4 +1,4 @@
-require_relative '../lib/powernap'
+require './lib/powernap'
 
 class Book
   include PowerNap::Memory

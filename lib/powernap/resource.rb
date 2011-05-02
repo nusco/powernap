@@ -17,7 +17,7 @@ module PowerNap
       
       def default_url
         name.downcase.pluralize
-      end      
+      end
     end
   end
 end
