@@ -6,7 +6,7 @@ module PowerNap
 
   def self.resource(resource_class)
     APPLICATION.define_routes_for resource_class
-    APPLICATION.define_routes_for_collection resource_class
+    APPLICATION.define_routes_for_collection_of resource_class
   end
   
   APPLICATION = Sinatra.new do
@@ -14,7 +14,10 @@ module PowerNap
 
     require 'rack/content_length'
     use Rack::ContentLength
-
+    
+    require 'powernap/middleware/default_extension'
+    use Rack::DefaultExtension
+    
     def access(resource_class, http_method)
       begin
         resource_class.authorize http_method
@@ -39,12 +42,6 @@ module PowerNap
             # FIXME: use Illegal Representation here?
             status 404
           end
-        end
-      end
-
-      get "/#{resource_class.url}/:id" do |id|
-        access resource_class, :get do
-          resource_class[id].get.to_json
         end
       end
     
@@ -75,13 +72,7 @@ module PowerNap
       end
     end
   
-    def self.define_routes_for_collection(resource_class)
-      get "/#{resource_class.url}" do
-        access resource_class, :get do
-          resource_class.list.to_json
-        end
-      end
-
+    def self.define_routes_for_collection_of(resource_class)
       get "/#{resource_class.url}.:representation" do |representation|
         access resource_class, :get do
           case representation
