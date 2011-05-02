@@ -2,11 +2,11 @@ require 'sinatra/base'
 require 'erb'
 
 module PowerNap
-  def self.resource(resource_class, args = {})
-    resource_class.extend PowerNap::Resource::ClassMethods
-    url = args[:at] || resource_class.default_url
-    APPLICATION.define_routes_for resource_class, url
-    APPLICATION.define_routes_for_collection resource_class, url
+  class HttpException < Exception; end
+
+  def self.resource(resource_class)
+    APPLICATION.define_routes_for resource_class
+    APPLICATION.define_routes_for_collection resource_class
   end
   
   APPLICATION = Sinatra.new do
@@ -16,24 +16,18 @@ module PowerNap
     use Rack::ContentLength
 
     def access(resource_class, http_method)
-      if [:get, :post, :put, :delete].include?(http_method)
-        unless resource_class.allowed_methods.include?(http_method)
-          status 405
-          headers 'Allow' => resource_class.allowed_methods_as_string
-          return
-        end
-      end
       begin
+        resource_class.authorize http_method
         yield
-      rescue Exception => e
-        status e.message.to_i
+      rescue HttpException => e
+        e.message
       end
     end
   
     options %r{\*} do; end
   
-    def self.define_routes_for(resource_class, url)
-      get "/#{url}/:id.:representation" do |id, representation|
+    def self.define_routes_for(resource_class)
+      get "/#{resource_class.url}/:id.:representation" do |id, representation|
         access resource_class, :get do
           @resource = resource_class[id].get
           case representation
@@ -48,48 +42,47 @@ module PowerNap
         end
       end
 
-      get "/#{url}/:id" do |id|
+      get "/#{resource_class.url}/:id" do |id|
         access resource_class, :get do
           resource_class[id].get.to_json
         end
       end
     
-      put "/#{url}/:id" do |id|
+      put "/#{resource_class.url}/:id" do |id|
          access resource_class, :put do
           resource_class[id].put(request.body.read)
-          # FIXME: this sucks. find a decent way to access Rack request headers (or fix Rack)
-          headers 'Allow' => resource_class.allowed_methods_as_string if request.env['HTTP_ALLOW']
+          headers 'Allow' => resource_class.allow_header if request.env['HTTP_ALLOW']
         end
       end
     
-      delete "/#{url}/:id" do |id|
+      delete "/#{resource_class.url}/:id" do |id|
         access resource_class, :delete do
           resource_class[id].delete
         end
       end
 
-      post "/#{url}/:id" do |id|
+      post "/#{resource_class.url}/:id" do |id|
         access resource_class, :post do
           resource_class[id].post(request.body.read)
         end
       end
 
-      options "/#{url}/:id" do |id|
+      options "/#{resource_class.url}/:id" do |id|
         access resource_class, :options do
           resource_class[id] # check that the resource does exist
-          headers 'Allow' => resource_class.allowed_methods_as_string
+          headers 'Allow' => resource_class.allow_header
         end
       end
     end
   
-    def self.define_routes_for_collection(resource_class, url)
-      get "/#{url}" do
+    def self.define_routes_for_collection(resource_class)
+      get "/#{resource_class.url}" do
         access resource_class, :get do
           resource_class.list.to_json
         end
       end
 
-      get "/#{url}.:representation" do |representation|
+      get "/#{resource_class.url}.:representation" do |representation|
         access resource_class, :get do
           case representation
           when 'html'
@@ -104,14 +97,14 @@ module PowerNap
         end
       end
 
-      post "/#{url}" do
+      post "/#{resource_class.url}" do
         access resource_class, :post do
           status 201
           resource_class.post(request.body.read)
         end
       end
       
-      options "/#{url}" do
+      options "/#{resource_class.url}" do
         access resource_class, :options do
           headers 'Allow' => "GET, POST"
         end

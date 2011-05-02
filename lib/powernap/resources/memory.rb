@@ -1,6 +1,7 @@
 module PowerNap
   module Memory
     def self.included(base)
+      base.extend PowerNap::Resource::ClassMethods
       base.extend ClassMethods
     end
     
@@ -52,7 +53,7 @@ module PowerNap
       end
       
       def [](id)
-        raise "404" unless resources.has_key? id
+        raise HttpException.new([404, {}, []]) unless resources.has_key? id
         resources[id]
       end
     end

@@ -1,29 +1,54 @@
 require 'spec_helper'
 
-describe PowerNap::Resource do
-  before :each do
-    Book.delete_all
-    Author.delete_all
-  end
+class SimpleResource
+  extend PowerNap::Resource::ClassMethods
 
-  it 'should respond to HTTP methods declared in responds_to' do
-    Author.allowed_methods.should include :post
-  end
+  private :delete
+end
+PowerNap.resource SimpleResource
 
-  it 'should not respond to HTTP methods not declared in responds_to' do
-    Author.allowed_methods.should_not include :get
-  end
+class WriteOnlyResource
+  extend PowerNap::Resource::ClassMethods
 
-  it 'should respond to all HTTP methods by default' do
-    Book.allowed_methods.should include :get, :post, :put, :delete
-  end
-
-  it "should have the default HTTP methods" do
-    id = Book.post '{"title": "Metaprogramming Ruby"}'
-    Book[id].get.should_not be_nil
-  end
+  private :get
+end
   
-  it 'can override HTTP methods' do
-    Library.get.should == "override"
+describe PowerNap::Resource do
+  it 'should authorize HTTP methods by default' do
+    lambda { SimpleResource.authorize(:post) }.should_not raise_exception
+  end
+
+  it 'should not authorize private HTTP methods' do
+    lambda {
+      SimpleResource.authorize(:delete)
+    }.should raise_exception(PowerNap::HttpException) {|e|
+      e.message.should == [405, {'Allow' => "GET, POST, PUT"}, []]
+    }
+    # FIXME: apparently, using do..end above means that the block is never
+    # executed. investigate. bug in ruby 1.9.2?
+  end
+
+  it 'should always authorize OPTIONS' do
+    lambda { SimpleResource.authorize(:options) }.should_not raise_exception
+  end
+
+  it 'should allow HEAD if GET is allows' do
+    lambda { SimpleResource.authorize(:head) }.should_not raise_exception
+  end
+
+  it 'should not allow HEAD if GET is not allowed' do
+    lambda {
+      WriteOnlyResource.authorize(:head)
+    }.should raise_exception(PowerNap::HttpException) {|e|
+      e.message.should == [405, {'Allow' => "POST, PUT, DELETE"}, []]
+    }
+  end
+
+  it 'should have a default URL' do
+    SimpleResource.url.should == 'simpleresources'
+  end
+
+  it 'should allow a custom URL' do
+    SimpleResource.at_url('my_url').url.should == 'my_url'
   end
 end

@@ -7,6 +7,7 @@ end
 module PowerNap
   module Mongoid
     def self.included(base)
+      base.extend PowerNap::Resource::ClassMethods
       base.extend ClassMethods
     end
     
@@ -42,7 +43,7 @@ module PowerNap
       def [](id)
         find(id)
       rescue
-        raise "404"
+        raise HttpException.new([404, {}, []])
       end
     end
   end

@@ -26,7 +26,7 @@ class Review
   include PowerNap::Mongoid
   include Mongoid::Document
 end
-PowerNap.resource Review, :at => 'my/smart_reviews'
+PowerNap.resource Review.at_url('my/smart_reviews')
 
 class Library
   include PowerNap::Mongoid
