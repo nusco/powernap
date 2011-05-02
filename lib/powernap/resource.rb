@@ -2,11 +2,7 @@ require 'mongoid'
 
 module PowerNap
   module Resource
-    module ClassMethods      
-      def default_url
-        name.downcase.pluralize
-      end
-      
+    module ClassMethods
       def authorize(http_method)
         return if http_method == :options
         http_method = :get if http_method == :head
@@ -19,7 +15,7 @@ module PowerNap
       end
 
       def url
-        @url || default_url
+        @url || name.downcase.pluralize
       end
       
       def at_url(url)

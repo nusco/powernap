@@ -12,7 +12,7 @@ class Author
   include PowerNap::Mongoid
   include Mongoid::Document
 
-  private :get, :delete
+  private :get, :put
   
   def post(body)
     "#{body}, #{name}!"

@@ -8,7 +8,7 @@ PowerNap.resource Book
 class Author
   include PowerNap::Memory
 
-  private :get, :delete
+  private :get, :put
   
   def post(body)
     "#{body}, #{fields['name']}!"

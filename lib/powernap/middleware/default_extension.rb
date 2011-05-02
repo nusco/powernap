@@ -1,9 +1,9 @@
 require 'rack/utils'
 
 module Rack
+  # Adds a default .json extension to GET and HEAD request unless
+  # the requested path already has an extension.
   class DefaultExtension
-    include Rack::Utils
-
     def initialize(app)
       @app = app
     end

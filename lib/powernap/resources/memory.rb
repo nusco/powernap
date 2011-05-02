@@ -8,7 +8,8 @@ module PowerNap
     attr_reader :id, :fields
     
     def initialize(id, fields)
-      @id, @fields = id, fields
+      @id = id
+      @fields = {'id' => id}.merge(fields)
     end
     
     def get
@@ -24,37 +25,35 @@ module PowerNap
     end
     
     module ClassMethods
-      def next_id
-        @next_id ||= 0
-        @next_id += 1
-        "#{@next_id}"
+      def get
+        resources.values.map {|r| r.fields }
       end
-      
+
       def post(new_resource)
         id = next_id
         resources[id] = new(id, JSON.parse(new_resource))
         id
       end
       
-      def resources
-        @resources ||= {}
-      end
-      
-      def all
-        resources.values
-      end
-      
-      def list
-        resources.keys.map {|id| resources[id].fields.merge({'id' => id}) }
+      def [](id)
+        raise HttpException.new([404, {}, []]) unless resources.has_key? id
+        resources[id]
       end
       
       def delete_all
         resources.clear
       end
+    
+      def resources
+        @resources ||= {}
+      end
       
-      def [](id)
-        raise HttpException.new([404, {}, []]) unless resources.has_key? id
-        resources[id]
+      private 
+
+      def next_id
+        @next_id ||= 0
+        @next_id += 1
+        "#{@next_id}"
       end
     end
   end

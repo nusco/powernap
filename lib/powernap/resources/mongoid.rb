@@ -24,20 +24,12 @@ module PowerNap
     end
     
     module ClassMethods
+      def get
+        all
+      end
+
       def post(new_resource)
         create(JSON.parse(new_resource)).id.to_s
-      end
-      
-      def delete_all
-        super
-      end
-      
-      def all
-        super
-      end
-      
-      def list
-        all
       end
       
       def [](id)

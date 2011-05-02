@@ -12,19 +12,16 @@ module PowerNap
   APPLICATION = Sinatra.new do
     set :views, File.dirname(__FILE__) + '/views'
 
-    require 'rack/content_length'
-    use Rack::ContentLength
-    
-    require 'powernap/middleware/default_extension'
     use Rack::DefaultExtension
+
+    require 'rack/content_length'
+    use Rack::ContentLength    
     
     def access(resource_class, http_method)
-      begin
-        resource_class.authorize http_method
-        yield
-      rescue HttpException => e
-        e.message
-      end
+      resource_class.authorize http_method
+      yield
+    rescue HttpException => e
+      e.message
     end
   
     options %r{\*} do; end
@@ -77,10 +74,10 @@ module PowerNap
         access resource_class, :get do
           case representation
           when 'html'
-            @resources = resource_class.list
+            @resources = resource_class.get
             erb :collection
           when 'json'
-            resource_class.list.to_json
+            resource_class.get.to_json
           else
             # FIXME: use Illegal Representation here?
             status 404

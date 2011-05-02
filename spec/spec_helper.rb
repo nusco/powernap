@@ -23,7 +23,7 @@ shared_examples_for 'any HTTP resource' do
     id = last_response.body
     get "/authors/#{id}"
     last_response.status.should == 405
-    last_response.headers['Allow'].should == 'POST, PUT'
+    last_response.headers['Allow'].should == 'POST, DELETE'
   end
 
   it 'should generate default URLs' do
@@ -157,7 +157,7 @@ shared_examples_for 'any HTTP resource' do
       id = last_response.body
       header 'Allow', 'GET, POST'
       put "/authors/#{id}", '{"name": "Paolo Nusco Perrotta"}'
-      last_response.headers['Allow'].should == 'POST, PUT'
+      last_response.headers['Allow'].should == 'POST, DELETE'
     end
   end
 
@@ -202,7 +202,7 @@ shared_examples_for 'any HTTP resource' do
 
     it 'should return allowed methods in the Allow header field' do
       options "/authors/#{@id}"
-      last_response.headers['Allow'].should == 'POST, PUT'
+      last_response.headers['Allow'].should == 'POST, DELETE'
     end
 
     it 'should return 200 for OK' do

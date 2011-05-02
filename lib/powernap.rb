@@ -1,4 +1,6 @@
-require_relative 'powernap/application'
-require_relative 'powernap/resource'
+require 'powernap/middleware/default_extension'
 
-require_relative 'powernap/resources/memory'
+require 'powernap/application'
+require 'powernap/resource'
+
+require 'powernap/resources/memory'
