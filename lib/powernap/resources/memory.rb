@@ -7,7 +7,6 @@ module PowerNap
     attr_reader :id, :fields
     
     def initialize(id, fields)
-      # FIXME: fields managed this way suck (esp. when converting to JSON)
       @id, @fields = id, fields
     end
     
@@ -53,9 +52,8 @@ module PowerNap
       end
       
       def [](id)
-        result = resources[id]
-        raise "Not Found" unless result
-        result
+        raise "404" unless resources.has_key? id
+        resources[id]
       end
     end
   end

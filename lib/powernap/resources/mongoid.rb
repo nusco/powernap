@@ -41,8 +41,7 @@ module PowerNap
       
       def [](id)
         find(id)
-      rescue Mongoid::Errors::DocumentNotFound
-        # FIXME: exceptions not managed
+      rescue
         raise "404"
       end
     end

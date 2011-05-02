@@ -25,8 +25,8 @@ module PowerNap
       end
       begin
         yield
-      rescue
-        status 404
+      rescue Exception => e
+        status e.message.to_i
       end
     end
   
