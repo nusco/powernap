@@ -110,6 +110,12 @@ module PowerNap
           resource_class.post(request.body.read)
         end
       end
+      
+      options "/#{url}" do
+        access resource_class, :options do
+          headers 'Allow' => "GET, POST"
+        end
+      end
     end    
   end
 end
