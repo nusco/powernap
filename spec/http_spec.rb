@@ -259,7 +259,7 @@ end
 
 shared_examples_for 'any HTTP resource collection' do
   before :each do
-    Book.delete_all
+    book_class.delete_all
   end
   
   describe 'accessed with GET' do      
@@ -327,6 +327,10 @@ describe PowerNap do
 
   def app
     PowerNap::APPLICATION
+  end
+
+  before :each do
+    book_class = Book
   end
 
   describe 'an HTTP service' do
