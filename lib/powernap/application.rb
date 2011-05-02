@@ -3,8 +3,8 @@ require 'erb'
 
 module PowerNap
   def self.resource(resource_class, args = {})
-    url = args[:at] || resource_class.default_url
     resource_class.extend PowerNap::Resource::ClassMethods
+    url = args[:at] || resource_class.default_url
     APPLICATION.define_routes_for resource_class, url
     APPLICATION.define_routes_for_collection resource_class, url
   end

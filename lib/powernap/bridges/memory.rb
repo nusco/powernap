@@ -40,10 +40,6 @@ module PowerNap
         @resources ||= {}
       end
       
-      def default_url
-        name.downcase.pluralize
-      end      
-      
       def all
         resources.values
       end

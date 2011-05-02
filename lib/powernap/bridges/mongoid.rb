@@ -27,11 +27,11 @@ module PowerNap
         create(JSON.parse(new_resource)).id.to_s
       end
       
-      def default_url
-        name.downcase.pluralize
-      end      
-      
       def delete_all
+        super
+      end
+      
+      def all
         super
       end
       
