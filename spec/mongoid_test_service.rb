@@ -1,14 +1,16 @@
 require_relative '../lib/powernap'
 
-class MongoidBook
+class Book
   include PowerNap::Mongoid
+  include Mongoid::Document
   
   field :title, type: String
 end
-PowerNap.resource MongoidBook
+PowerNap.resource Book
 
-class MongoidAuthor
+class Author
   include PowerNap::Mongoid
+  include Mongoid::Document
 
   private :get, :delete
   
@@ -18,20 +20,22 @@ class MongoidAuthor
   
   field :name, type: String
 end
-PowerNap.resource MongoidAuthor
+PowerNap.resource Author
 
-class MongoidReview
+class Review
   include PowerNap::Mongoid
+  include Mongoid::Document
 
   field :text, type: String
 end
-PowerNap.resource MongoidReview, :at => 'my/smart_reviews'
+PowerNap.resource Review, :at => 'my/smart_reviews'
 
-class MongoidLibrary
+class Library
   include PowerNap::Mongoid
+  include Mongoid::Document
 
   def self.get
     'override'
   end
 end
-PowerNap.resource MongoidLibrary
+PowerNap.resource Library

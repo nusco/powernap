@@ -15,11 +15,11 @@ module PowerNap
     require 'rack/content_length'
     use Rack::ContentLength
 
-    def access(res_class, http_method)
+    def access(resource_class, http_method)
       if [:get, :post, :put, :delete].include?(http_method)
-        unless res_class.allowed_methods.include?(http_method)
+        unless resource_class.allowed_methods.include?(http_method)
           status 405
-          headers 'Allow' => res_class.allowed_methods_as_string
+          headers 'Allow' => resource_class.allowed_methods_as_string
           return
         end
       end
@@ -85,7 +85,7 @@ module PowerNap
     def self.expose_collection(resource_class, url)
       get "/#{url}" do
         access resource_class, :get do
-          resource_class.all.to_json
+          resource_class.list.to_json
         end
       end
 
@@ -93,10 +93,10 @@ module PowerNap
         access resource_class, :get do
           case representation
           when 'html'
-            @resources = resource_class.all
+            @resources = resource_class.list
             erb :collection
           when 'json'
-            resource_class.all.to_json
+            resource_class.list.to_json
           else
             # FIXME: use Illegal Representation here?
             status 404

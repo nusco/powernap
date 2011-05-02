@@ -22,7 +22,6 @@ end
 module PowerNap
   module Mongoid
     def self.included(base)
-      base.send :include, ::Mongoid::Document
       base.extend ClassMethods
     end
     

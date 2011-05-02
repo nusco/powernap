@@ -48,14 +48,17 @@ module PowerNap
         resources.values
       end
       
+      def list
+        resources.keys.map {|id| resources[id].fields.merge({'id' => id}) }
+      end
+      
       def delete_all
-        resources = {}
+        resources.clear
       end
       
       def [](id)
         result = resources[id]
-        # FIXME: exceptions not managed
-        raise "404" unless result
+        raise "Not Found" unless result
         result
       end
     end

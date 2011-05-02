@@ -135,7 +135,6 @@ describe PowerNap do
       
       it 'should update an existing resource' do
         put "/books/#{@id}", '{"title": "Rails Recipes"}'
-        last_response.status.should == 200
         get "/books/#{@id}"
         JSON.parse(last_response.body)['title'].should == "Rails Recipes"
       end
@@ -291,12 +290,12 @@ describe PowerNap do
       
       it 'should get a list of resources as JSON when accessed without an extension' do
         get "/books"
-        JSON.parse(last_response.body)[0]['fields']['title'].should == "Metaprogramming Ruby"
+        JSON.parse(last_response.body)[0]['title'].should == "Metaprogramming Ruby"
       end
       
       it 'should get the resource as JSON' do
         get "/books.json"
-        JSON.parse(last_response.body)[0]['fields']['title'].should == "Metaprogramming Ruby"
+        JSON.parse(last_response.body)[0]['title'].should == "Metaprogramming Ruby"
       end
       
       it 'should get the resource as XHTML' do
