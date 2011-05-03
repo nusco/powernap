@@ -16,7 +16,7 @@ rescue Mongo::ConnectionFailure
 end
 
 require 'spec_helper'
-require 'powernap/resources/mongoid'
+require 'powernap/adapters/mongoid'
 require_relative 'service'
 
 puts 'Running Mongoid tests...'

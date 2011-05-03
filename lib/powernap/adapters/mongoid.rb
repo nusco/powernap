@@ -1,10 +1,12 @@
 require_relative '../resource'
 require 'mongoid'
 
+# TODO: extenalize config
 Mongoid.configure do |config|
   config.master = Mongo::Connection.new.db("powernap")
 end
 
+# Adapter for Mongoid resources
 module PowerNap
   module Mongoid
     def self.included(base)

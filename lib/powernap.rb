@@ -1,2 +1,2 @@
 require 'powernap/application'
-require 'powernap/resources/memory'
+require 'powernap/adapters/memory'

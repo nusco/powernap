@@ -1,8 +1,9 @@
 require 'powernap/default_extension'
-require 'spec_helper'
+
+require 'rack/test'
+ENV['RACK_ENV'] = 'test'
 
 describe Rack::DefaultExtension do
-
   include Rack::Test::Methods
 
   def app

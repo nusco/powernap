@@ -4,9 +4,9 @@ require 'erb'
 module PowerNap
   class HttpException < Exception; end
 
-  def self.resource(resource_class)
-    APPLICATION.define_routes_for resource_class
-    APPLICATION.define_routes_for_collection_of resource_class
+  def self.resource(res_class)
+    APPLICATION.define_routes_for res_class
+    APPLICATION.define_routes_for_collection_of res_class
   end
   
   APPLICATION = Sinatra.new do
@@ -18,21 +18,21 @@ module PowerNap
     require 'rack/content_length'
     use Rack::ContentLength    
     
-    def access(resource_class, http_method)
+    def access(res_class)
       yield
     rescue NoMethodError => e
-      [405, {'Allow' => resource_class.allow_header}, []]
+      [405, {'Allow' => res_class.allow_header}, []]
     rescue HttpException => e
       e.message
     end
 
     options %r{\*} do; end
   
-    def self.define_routes_for(resource_class)
-      get "/#{resource_class.url}/:id.:representation" do |id, representation|
-        access resource_class, :get do
-          @resource = resource_class[id].get
-          case representation
+    def self.define_routes_for(res_class)
+      get "/#{res_class.url}/:id.:extension" do |id, extension|
+        access res_class do
+          @resource = res_class[id].get
+          case extension
           when 'html'
             erb :resource
           when 'json'
@@ -44,42 +44,42 @@ module PowerNap
         end
       end
     
-      put "/#{resource_class.url}/:id" do |id|
-         access resource_class, :put do
-          resource_class[id].put(request.body.read)
-          headers 'Allow' => resource_class.allow_header if request.env['HTTP_ALLOW']
+      put "/#{res_class.url}/:id" do |id|
+         access res_class do
+          res_class[id].put(request.body.read)
+          headers 'Allow' => res_class.allow_header if request.env['HTTP_ALLOW']
         end
       end
     
-      delete "/#{resource_class.url}/:id" do |id|
-        access resource_class, :delete do
-          resource_class[id].delete
+      delete "/#{res_class.url}/:id" do |id|
+        access res_class do
+          res_class[id].delete
         end
       end
 
-      post "/#{resource_class.url}/:id" do |id|
-        access resource_class, :post do
-          resource_class[id].post(request.body.read)
+      post "/#{res_class.url}/:id" do |id|
+        access res_class do
+          res_class[id].post(request.body.read)
         end
       end
 
-      options "/#{resource_class.url}/:id" do |id|
-        access resource_class, :options do
-          resource_class[id] # check that the resource does exist
-          headers 'Allow' => resource_class.allow_header
+      options "/#{res_class.url}/:id" do |id|
+        access res_class do
+          res_class[id] # check that the resource does exist
+          headers 'Allow' => res_class.allow_header
         end
       end
     end
   
-    def self.define_routes_for_collection_of(resource_class)
-      get "/#{resource_class.url}.:representation" do |representation|
-        access resource_class, :get do
-          case representation
+    def self.define_routes_for_collection_of(res_class)
+      get "/#{res_class.url}.:extension" do |extension|
+        access res_class do
+          case extension
           when 'html'
-            @resources = resource_class.get
+            @resources = res_class.get
             erb :collection
           when 'json'
-            resource_class.get.to_json
+            res_class.get.to_json
           else
             # FIXME: use Illegal Representation here?
             status 404
@@ -87,15 +87,15 @@ module PowerNap
         end
       end
 
-      post "/#{resource_class.url}" do
-        access resource_class, :post do
+      post "/#{res_class.url}" do
+        access res_class do
           status 201
-          resource_class.post(request.body.read)
+          res_class.post(request.body.read)
         end
       end
       
-      options "/#{resource_class.url}" do
-        access resource_class, :options do
+      options "/#{res_class.url}" do
+        access res_class do
           headers 'Allow' => "GET, POST"
         end
       end

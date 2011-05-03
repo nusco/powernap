@@ -1,5 +1,6 @@
 require 'mongoid'
 
+# Shared methods for all resouces
 module PowerNap
   module Resource
     module ClassMethods

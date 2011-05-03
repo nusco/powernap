@@ -1,5 +1,6 @@
 require_relative '../resource'
 
+# Adapter for in-memory resources
 module PowerNap
   module Memory
     def self.included(base)
@@ -7,13 +8,12 @@ module PowerNap
       base.extend ClassMethods
     end
     
-    attr_reader :id, :fields
+    attr_reader :fields
     
     def initialize(id, fields)
-      @id = id
       @fields = {'id' => id}.merge(fields)
     end
-    
+
     def get
       fields
     end
@@ -23,7 +23,7 @@ module PowerNap
     end
 
     def delete
-      self.class.resources.delete id
+      self.class.resources.delete fields['id']
     end
     
     module ClassMethods
