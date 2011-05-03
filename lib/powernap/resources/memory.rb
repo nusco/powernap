@@ -1,3 +1,5 @@
+require_relative '../resource'
+
 module PowerNap
   module Memory
     def self.included(base)

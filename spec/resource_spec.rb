@@ -12,14 +12,14 @@ class WriteOnlyResource
 
   private :get
 end
-  
+
 describe PowerNap::Resource do
   it 'should allow public HTTP methods' do
     SimpleResource.allow_header().should == "GET, POST, PUT"
   end
 
   it 'should have a default URL' do
-    SimpleResource.url.should == 'simpleresources'
+    WriteOnlyResource.url.should == 'writeonlyresources'
   end
 
   it 'should allow a custom URL' do

@@ -1,4 +1,4 @@
-require 'powernap/middleware/default_extension'
+require 'powernap/default_extension'
 require 'spec_helper'
 
 describe Rack::DefaultExtension do

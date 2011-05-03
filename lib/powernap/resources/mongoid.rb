@@ -1,3 +1,4 @@
+require_relative '../resource'
 require 'mongoid'
 
 Mongoid.configure do |config|

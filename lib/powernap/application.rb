@@ -12,6 +12,7 @@ module PowerNap
   APPLICATION = Sinatra.new do
     set :views, File.dirname(__FILE__) + '/views'
 
+    require_relative 'default_extension'
     use Rack::DefaultExtension
 
     require 'rack/content_length'
