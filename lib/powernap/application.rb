@@ -13,11 +13,14 @@ module PowerNap
   APPLICATION = Sinatra.new do
     set :views, File.dirname(__FILE__) + '/views'
 
+    require 'rack/content_length'
+    use Rack::ContentLength
+
     require_relative 'default_extension'
     use Rack::DefaultExtension
 
-    require 'rack/content_length'
-    use Rack::ContentLength    
+    require_relative 'representations'
+    use Rack::Representations
     
     def access(res_class)
       yield
@@ -32,18 +35,16 @@ module PowerNap
     def self.define_routes_for(res_class)
       get "/#{res_class.url}/:id.:extension" do |id, extension|
         access res_class do
-          @resource = res_class[id].get
-          case extension
-          when 'html'
-            erb :resource
-          when 'json'
-            @resource.to_json
-          else
-            status 415
-          end
+          res_class[id].get.to_json
         end
       end
     
+      post "/#{res_class.url}/:id" do |id|
+        access res_class do
+          res_class[id].post(request.body.read)
+        end
+      end
+
       put "/#{res_class.url}/:id" do |id|
          access res_class do
           res_class[id].put(request.body.read)
@@ -54,12 +55,6 @@ module PowerNap
       delete "/#{res_class.url}/:id" do |id|
         access res_class do
           res_class[id].delete
-        end
-      end
-
-      post "/#{res_class.url}/:id" do |id|
-        access res_class do
-          res_class[id].post(request.body.read)
         end
       end
 
@@ -74,15 +69,7 @@ module PowerNap
     def self.define_routes_for_collection_of(res_class)
       get "/#{res_class.url}.:extension" do |extension|
         access res_class do
-          case extension
-          when 'html'
-            @resources = res_class.get
-            erb :collection
-          when 'json'
-            res_class.get.to_json
-          else
-            status 415
-          end
+           res_class.get.to_json
         end
       end
 

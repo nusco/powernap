@@ -1,2 +1,3 @@
+require './lib/powernap'
 require './spec/memory/service'
-run PowerNap::APPLICATION
+run Rack::ShowExceptions.new(PowerNap::APPLICATION)

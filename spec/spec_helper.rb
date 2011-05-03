@@ -2,15 +2,13 @@ require 'bundler/setup'
 require './lib/powernap'
 
 require 'rack/test'
-ENV['RACK_ENV'] = 'test'
+#ENV['RACK_ENV'] = 'test'
 
 include Rack::Test::Methods
 
 def app
   PowerNap::APPLICATION
 end
-
-require 'resource_spec'
 
 shared_examples_for 'any HTTP resource' do
   before :each do
@@ -55,6 +53,8 @@ shared_examples_for 'any HTTP resource' do
     end
   
     it 'should get the resource as XHTML' do
+      # TODO
+      pending
       get "/books/#{@id}.html"
       require 'nokogiri'
       last_response.body.should include "<p>Metaprogramming Ruby</p>"
@@ -64,7 +64,7 @@ shared_examples_for 'any HTTP resource' do
     end
 
     it 'should return 415 for Unsupported Media Type' do
-      get "/books/#{@id}.txt"
+      get "/books/#{@id}.doc"
       last_response.status.should == 415
     end
 
@@ -74,7 +74,7 @@ shared_examples_for 'any HTTP resource' do
     end
   
     it 'should return a Content-Length header' do
-      get "/books/#{@id}.txt"
+      get "/books/#{@id}.json"
       last_response.content_length.should == last_response.body.size
     end
 
@@ -255,7 +255,7 @@ shared_examples_for 'any HTTP resource' do
     end
   
     it 'should return 415 for Unsupported Media Type' do
-      head "/books/#{@id}.txt"
+      head "/books/#{@id}.doc"
       last_response.status.should == 415
     end
   
@@ -304,6 +304,8 @@ shared_examples_for 'any HTTP resource collection' do
     end
   
     it 'should get a list of resources as XHTML' do
+      # TODO
+      pending
       get "/books.html"
       require 'nokogiri'
       last_response.body.should include "<p>Metaprogramming Ruby</p>"
@@ -313,7 +315,7 @@ shared_examples_for 'any HTTP resource collection' do
     end
 
     it 'should return 415 for Unsupported Media Type' do
-      get "/books.txt"
+      get "/books.doc"
       last_response.status.should == 415
     end
 
@@ -352,7 +354,7 @@ shared_examples_for 'any HTTP resource collection' do
       end
 
       it 'should return 415 for Unsupported Media Type' do
-        head "/books.txt"
+        head "/books.doc"
         last_response.status.should == 415
       end
   end

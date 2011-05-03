@@ -1,5 +1,3 @@
-require './lib/powernap'
-
 class Book
   include PowerNap::Memory
 end

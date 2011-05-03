@@ -1,2 +1,2 @@
-require 'powernap/application'
-require 'powernap/adapters/memory'
+require_relative 'powernap/application'
+require_relative 'powernap/adapters/memory'
