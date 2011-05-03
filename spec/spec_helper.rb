@@ -268,6 +268,13 @@ shared_examples_for 'any HTTP resource' do
       head "/dogs/12345"
       last_response.status.should == 404
     end
+
+    it "should return 405 if GET is not allowed" do
+      post '/authors', '{"name": "Nusco"}'
+      id = last_response.body
+      head "/authors/#{id}"
+      last_response.status.should == 405
+    end
   end
 end
 

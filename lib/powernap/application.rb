@@ -18,12 +18,13 @@ module PowerNap
     use Rack::ContentLength    
     
     def access(resource_class, http_method)
-      resource_class.authorize http_method
       yield
+    rescue NoMethodError => e
+      [405, {'Allow' => resource_class.allow_header}, []]
     rescue HttpException => e
       e.message
     end
-  
+
     options %r{\*} do; end
   
     def self.define_routes_for(resource_class)
