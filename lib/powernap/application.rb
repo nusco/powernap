@@ -1,6 +1,7 @@
 require 'sinatra/base'
 require 'erb'
 
+# The HTTP entry point to resources
 module PowerNap
   class HttpException < Exception; end
 
@@ -38,8 +39,7 @@ module PowerNap
           when 'json'
             @resource.to_json
           else
-            # FIXME: use Illegal Representation here?
-            status 404
+            status 415
           end
         end
       end
@@ -81,8 +81,7 @@ module PowerNap
           when 'json'
             res_class.get.to_json
           else
-            # FIXME: use Illegal Representation here?
-            status 404
+            status 415
           end
         end
       end

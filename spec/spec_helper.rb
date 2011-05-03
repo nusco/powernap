@@ -63,6 +63,11 @@ shared_examples_for 'any HTTP resource' do
       #Nokogiri::XML(last_response.body).xpath(boh).should == 'Metaprogramming Ruby'
     end
 
+    it 'should return 415 for Unsupported Media Type' do
+      get "/books/#{@id}.txt"
+      last_response.status.should == 415
+    end
+
     it 'should return 200 for OK' do
       get "/books/#{@id}"
       last_response.status.should == 200
@@ -249,11 +254,11 @@ shared_examples_for 'any HTTP resource' do
       last_response.content_length.should == content_length
     end
   
-    it 'should return a 404 for unknown extensions' do
+    it 'should return 415 for Unsupported Media Type' do
       head "/books/#{@id}.txt"
-      last_response.status.should == 404
+      last_response.status.should == 415
     end
-
+  
     it 'should return 404 for URL Not Found' do
       head "/books/whatever/123"
       last_response.status.should == 404
@@ -307,6 +312,11 @@ shared_examples_for 'any HTTP resource collection' do
       #Nokogiri::XML(last_response.body).xpath(boh).should == 'Metaprogramming Ruby'
     end
 
+    it 'should return 415 for Unsupported Media Type' do
+      get "/books.txt"
+      last_response.status.should == 415
+    end
+
     it 'should return 200 for OK' do
       get "/books"
       last_response.status.should == 200
@@ -339,6 +349,11 @@ shared_examples_for 'any HTTP resource collection' do
         content_length = last_response.content_length
         head "/books"
         last_response.content_length.should == content_length
+      end
+
+      it 'should return 415 for Unsupported Media Type' do
+        head "/books.txt"
+        last_response.status.should == 415
       end
   end
   
