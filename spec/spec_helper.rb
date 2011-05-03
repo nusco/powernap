@@ -2,7 +2,7 @@ require 'bundler/setup'
 require './lib/powernap'
 
 require 'rack/test'
-#ENV['RACK_ENV'] = 'test'
+ENV['RACK_ENV'] = 'test'
 
 include Rack::Test::Methods
 
@@ -50,17 +50,6 @@ shared_examples_for 'any HTTP resource' do
     it 'should get the resource as JSON' do
       get "/books/#{@id}.json"
       JSON.parse(last_response.body)['title'].should == "Metaprogramming Ruby"
-    end
-  
-    it 'should get the resource as XHTML' do
-      # TODO
-      pending
-      get "/books/#{@id}.html"
-      require 'nokogiri'
-      last_response.body.should include "<p>Metaprogramming Ruby</p>"
-
-      # TODO
-      #Nokogiri::XML(last_response.body).xpath(boh).should == 'Metaprogramming Ruby'
     end
 
     it 'should return 415 for Unsupported Media Type' do
@@ -301,17 +290,6 @@ shared_examples_for 'any HTTP resource collection' do
     it 'should get a list of resources as JSON' do
       get "/books.json"
       JSON.parse(last_response.body)[0]['title'].should == "Metaprogramming Ruby"
-    end
-  
-    it 'should get a list of resources as XHTML' do
-      # TODO
-      pending
-      get "/books.html"
-      require 'nokogiri'
-      last_response.body.should include "<p>Metaprogramming Ruby</p>"
-
-      # TODO
-      #Nokogiri::XML(last_response.body).xpath(boh).should == 'Metaprogramming Ruby'
     end
 
     it 'should return 415 for Unsupported Media Type' do

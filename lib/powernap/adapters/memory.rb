@@ -38,7 +38,7 @@ module PowerNap
       end
       
       def [](id)
-        raise HttpException.new([404, {}, []]) unless resources.has_key? id
+        raise Sinatra::NotFound unless resources.has_key? id
         resources[id]
       end
       

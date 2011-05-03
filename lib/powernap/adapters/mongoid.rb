@@ -38,7 +38,7 @@ module PowerNap
       def [](id)
         find(id)
       rescue
-        raise HttpException.new([404, {}, []])
+        raise Sinatra::NotFound
       end
     end
   end

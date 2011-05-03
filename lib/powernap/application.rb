@@ -1,18 +1,16 @@
 require 'sinatra/base'
 require 'erb'
 
+class HttpException < Exception; end
+
 # The HTTP entry point to resources
 module PowerNap
-  class HttpException < Exception; end
-
-  def self.resource(res_class)
-    APPLICATION.define_routes_for res_class
-    APPLICATION.define_routes_for_collection_of res_class
+  def self.resource(res)
+    APPLICATION.define_routes_for res
+    APPLICATION.define_routes_for_collection_of res
   end
   
   APPLICATION = Sinatra.new do
-    set :views, File.dirname(__FILE__) + '/views'
-
     require 'rack/content_length'
     use Rack::ContentLength
 
@@ -22,66 +20,65 @@ module PowerNap
     require_relative 'representations'
     use Rack::Representations
     
-    def access(res_class)
+    def access(res)
       yield
-    rescue NoMethodError => e
-      [405, {'Allow' => res_class.allow_header}, []]
-    rescue HttpException => e
-      e.message
+    rescue NoMethodError
+      [405, {'Allow' => res.allow_header}, []]      
     end
 
     options %r{\*} do; end
   
-    def self.define_routes_for(res_class)
-      get "/#{res_class.url}/:id.:extension" do |id, extension|
-        access res_class do
-          res_class[id].get.to_json
+    def self.define_routes_for(res)
+      
+      get "/#{res.url}/:id.:extension" do |id, extension|
+        access res do
+          res[id].get.to_json
         end
       end
     
-      post "/#{res_class.url}/:id" do |id|
-        access res_class do
-          res_class[id].post(request.body.read)
+      post "/#{res.url}/:id" do |id|
+        access res do
+          res[id].post(request.body.read)
         end
       end
 
-      put "/#{res_class.url}/:id" do |id|
-         access res_class do
-          res_class[id].put(request.body.read)
-          headers 'Allow' => res_class.allow_header if request.env['HTTP_ALLOW']
+      put "/#{res.url}/:id" do |id|
+         access res do
+          res[id].put(request.body.read)
+          headers 'Allow' => res.allow_header if request.env['HTTP_ALLOW']
         end
       end
     
-      delete "/#{res_class.url}/:id" do |id|
-        access res_class do
-          res_class[id].delete
+      delete "/#{res.url}/:id" do |id|
+        access res do
+          res[id].delete
         end
       end
 
-      options "/#{res_class.url}/:id" do |id|
-        access res_class do
-          res_class[id] # check that the resource does exist
-          headers 'Allow' => res_class.allow_header
+      options "/#{res.url}/:id" do |id|
+        access res do
+          res[id] # check that the resource does exist
+          headers 'Allow' => res.allow_header
         end
       end
     end
   
-    def self.define_routes_for_collection_of(res_class)
-      get "/#{res_class.url}.:extension" do |extension|
-        access res_class do
-           res_class.get.to_json
+    def self.define_routes_for_collection_of(res)
+      get "/#{res.url}.:extension" do |extension|
+        access res do
+           res.get.to_json
         end
       end
 
-      post "/#{res_class.url}" do
-        access res_class do
+      post "/#{res.url}" do
+        access res do
           status 201
-          res_class.post(request.body.read)
+          res.post(request.body.read)
         end
       end
       
-      options "/#{res_class.url}" do
-        access res_class do
+      options "/#{res.url}" do
+        access res do
           headers 'Allow' => "GET, POST"
         end
       end
