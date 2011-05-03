@@ -1,14 +1,14 @@
 require 'spec_helper'
 
 class SimpleResource
-  extend PowerNap::Resource::ClassMethods
+  include PowerNap::Resource
 
   private :delete
 end
 PowerNap.resource SimpleResource
 
 class WriteOnlyResource
-  extend PowerNap::Resource::ClassMethods
+  include PowerNap::Resource
 
   private :get
 end

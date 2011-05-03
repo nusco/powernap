@@ -10,12 +10,12 @@ end
 module PowerNap
   module Mongoid
     def self.included(base)
-      base.extend PowerNap::Resource::ClassMethods
+      base.send :include, PowerNap::Resource
       base.extend ClassMethods
     end
     
     def get
-      self
+      self.to_json
     end
 
     def put(resource)

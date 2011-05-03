@@ -4,18 +4,23 @@ require_relative '../resource'
 module PowerNap
   module Memory
     def self.included(base)
-      base.extend PowerNap::Resource::ClassMethods
+      base.send :include, PowerNap::Resource
       base.extend ClassMethods
     end
     
     attr_reader :fields
     
-    def initialize(id, fields)
-      @fields = {'id' => id}.merge(fields)
+    def id
+      # FIXME: remove
+      @fields['_id']
+    end
+    
+    def initialize(json)
+      @fields = {'_id' => self.class.next_id}.merge(JSON.parse(json))
     end
 
     def get
-      fields
+      @fields.to_json
     end
 
     def put(resource)
@@ -23,7 +28,17 @@ module PowerNap
     end
 
     def delete
-      self.class.resources.delete fields['id']
+      self.class.resources.delete fields['_id']
+    end
+    
+    def method_missing(name, *args)
+      field = name.to_s.gsub(/=$/, '')
+      super unless @fields.has_key? field
+      if name.to_s.ends_with? '='
+        @fields[field] = args[0]
+      else
+        @fields[field]
+      end
     end
     
     module ClassMethods
@@ -31,10 +46,10 @@ module PowerNap
         resources.values.map {|r| r.fields }
       end
 
-      def post(new_resource)
-        id = next_id
-        resources[id] = new(id, JSON.parse(new_resource))
-        id
+      def post(json)
+        resource = new(json)
+        resources[resource.id] = resource
+        resource.id
       end
       
       def [](id)
@@ -49,8 +64,6 @@ module PowerNap
       def resources
         @resources ||= {}
       end
-      
-      private 
 
       def next_id
         @next_id ||= 0

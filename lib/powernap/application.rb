@@ -32,7 +32,7 @@ module PowerNap
       
       get "/#{res.url}/:id.:extension" do |id, extension|
         access res do
-          res[id].get.to_json
+          res[id].get
         end
       end
     
