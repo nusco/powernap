@@ -30,12 +30,18 @@ describe PowerNap::Resource do
   end
   
   it 'should fail fast if a field name conflicts with a method in Object' do
-    pending
     lambda {
       Cat.new('{"name": "Felix", "clone": "Boom!"}')
     }.should raise_error do |e|
+      e.message.should == 'Field "clone" clashes with method clone() in Cat.'
     end
-    r.clone = 'x'
-    r.clone.should == 'x'
+  end
+  
+  it 'should fail fast if a field name conflicts with a method in BasicObject' do
+    lambda {
+      Cat.new('{"name": "Felix", "instance_eval": "Boom!"}')
+    }.should raise_error do |e|
+      e.message.should == 'Reserved field name: "instance_eval".'
+    end
   end
 end

@@ -16,7 +16,16 @@ module PowerNap
     end
     
     def initialize(json)
-      @fields = {'_id' => self.class.next_id}.merge(JSON.parse(json))
+      fields = JSON.parse(json)
+      fields.each_key do |f|
+        if BasicObject.instance_methods.include? f
+          raise "Reserved field name: \"#{f}\""
+        end
+        if super.respond_to? f
+          raise "Field \"#{f}\" clashes with method #{f}() in #{self.class}. Maybe try inheriting from BasicObject?"
+        end
+      end
+      @fields = {'_id' => self.class.next_id}.merge(fields)
     end
 
     def get
