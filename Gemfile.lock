@@ -29,7 +29,7 @@ GEM
       will_paginate (~> 3.0.pre)
     nokogiri (1.4.4)
     rack (1.2.2)
-    ripl (0.3.6)
+    ripl (0.4.1)
       bond (~> 0.4.0)
     ripl-auto_indent (0.1.4)
       coderay (~> 0.9)
