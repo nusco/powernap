@@ -4,18 +4,14 @@ require './lib/powernap'
 require 'rack/test'
 ENV['RACK_ENV'] = 'test'
 
-include Rack::Test::Methods
-
-def app
-  PowerNap::APPLICATION
-end
-
 shared_examples_for 'any HTTP resource' do
+  include Rack::Test::Methods
+  
   before :each do
     Book.delete_all
     Author.delete_all
   end
-
+  
   it 'should return 405 for Method Not Allowed' do
     post '/authors', '{"name": "Nusco"}'
     id = last_response.body
@@ -273,11 +269,17 @@ shared_examples_for 'any HTTP resource' do
 end
 
 shared_examples_for 'any HTTP resource collection' do
+  include Rack::Test::Methods
+
+  attr_reader :app
+  
   before :each do
-    Book.delete_all
+    @app = PowerNap.build_application do
+      resource Book
+    end
   end
 
-  describe 'accessed with GET' do      
+  describe 'accessed with GET' do
     before :each do
       post '/books', '{"title": "Metaprogramming Ruby"}'
     end

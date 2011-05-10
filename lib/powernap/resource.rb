@@ -3,23 +3,16 @@ require 'mongoid'
 # Shared methods for all resouces
 module PowerNap
   module Resource
-    def self.included(base)
-      base.extend ClassMethods
-    end
-    
     module ClassMethods
       def allow_header
         allowed = [:get, :post, :put, :delete] & public_instance_methods
         allowed.map(&:upcase).join(', ')
       end
 
+      attr_writer :url
+      
       def url
         @url || name.downcase.pluralize
-      end
-      
-      def at_url(url)
-        @url = url
-        self
       end
     end
   end

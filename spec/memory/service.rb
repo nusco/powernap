@@ -1,10 +1,9 @@
 class Book
-  include PowerNap::Memory
+  include PowerNap::Resource::Memory
 end
-PowerNap.resource Book
 
 class Author
-  include PowerNap::Memory
+  include PowerNap::Resource::Memory
 
   private :get, :put
   
@@ -12,18 +11,7 @@ class Author
     "#{body}, #{fields['name']}!"
   end
 end
-PowerNap.resource Author
 
 class Review
-  include PowerNap::Memory
+  include PowerNap::Resource::Memory
 end
-PowerNap.resource Review.at_url('my/smart_reviews')
-
-class Library
-  include PowerNap::Memory
-
-  def self.get
-    'override'
-  end
-end
-PowerNap.resource Library

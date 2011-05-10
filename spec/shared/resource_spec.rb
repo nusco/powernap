@@ -1,28 +1,27 @@
 require 'spec_helper'
 
 class SimpleResource
-  include PowerNap::Resource
+  extend PowerNap::Resource::ClassMethods
 
-  private :delete
-end
-PowerNap.resource SimpleResource
-
-class WriteOnlyResource
-  include PowerNap::Resource
-
-  private :get
+  def get; end
+  def put; end
+  
+  private
+  
+  def delete; end
 end
 
 describe PowerNap::Resource do
   it 'should allow public HTTP methods' do
-    SimpleResource.allow_header().should == "GET, POST, PUT"
+    SimpleResource.allow_header().should == "GET, PUT"
   end
 
   it 'should have a default URL' do
-    WriteOnlyResource.url.should == 'writeonlyresources'
+    SimpleResource.url.should == 'simpleresources'
   end
 
   it 'should allow a custom URL' do
-    SimpleResource.at_url('my_url').url.should == 'my_url'
+    SimpleResource.url = 'my_url'
+    SimpleResource.url.should == 'my_url'
   end
 end

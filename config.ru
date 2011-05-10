@@ -1,3 +1,7 @@
 require './lib/powernap'
 require './spec/memory/service'
-run Rack::ShowExceptions.new(PowerNap::APPLICATION)
+app = PowerNap.build_application do
+        resource Book
+        resource Author
+      end
+run Rack::ShowExceptions.new(app)
