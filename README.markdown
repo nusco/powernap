@@ -26,12 +26,12 @@ The PowerNap application is just a regular Sinatra application (see http://www.s
 
 OK, now you can talk to your app. It talks JSON by default. It contains two resources: books and lists of books. So you get these URLS:
 
-  GET books/         # retrieve a list of all books
+  GET  books/        # retrieve a list of all books
   POST books/        # insert a new book. the request body must contain the book as JSON.
                      # the response body contains the id of the new resource
 
-  GET books/1        # returns the book in the response body (as JSON)
-  PUT books/1        # changes the fields of the book with id 1. the request body must contain the fields as JSON
+  GET    books/<id>  # returns the book in the response body (as JSON)
+  PUT    books/<id>  # changes the fields of the book with id 1. the request body must contain the fields as JSON
   DELETE books/<id>  # deletes the book with id
 
 For example:

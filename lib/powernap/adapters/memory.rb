@@ -11,8 +11,8 @@ module PowerNap
 
       attr_reader :fields
 
-      def initialize(json)
-        fields = JSON.parse(json)
+      def initialize(fields)
+        fields = JSON.parse(fields) unless fields.class == Hash
         @fields = {'id' => self.class.next_id}.merge(fields)
         @fields.each_key do |f|
           raise "Reserved field name: \"#{f}\"." if BasicObject.instance_methods.include? f
