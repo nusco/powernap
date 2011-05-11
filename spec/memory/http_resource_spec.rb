@@ -5,7 +5,7 @@ puts 'Running in-memory tests...'
 
 describe "An in-memory resource" do
   def app
-    a = PowerNap.build_application do
+    PowerNap.build_application do
       resource Book
       resource Author
       resource Review, :at_url => 'my/smart_reviews'
