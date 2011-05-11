@@ -1,0 +1,37 @@
+PowerNap is a zero-friction REST framework for web services. You just define a Ruby class, and then expose it as a set of HTTP resources:
+
+  class Book
+    include PowerNap::Resource::Memory
+  end
+  
+  app = PowerNap.build_application do
+    resource Book
+  end
+
+OK, done. Now you can use app as a regular Rack app - for example, to load it in your config.ru. If you want an example, launch rackup in the root of this project.
+
+The app contains two resources: books and lists of books. So you get these URLS:
+
+  GET books/      # get the list of all books
+  POST books/     # insert a new book. the request body must contain the resource as JSON. the response body contains the id of the new resource
+
+  GET books/1        # returns the book with id 1 in the response body (as JSON)
+  PUT books/1        # changes the fields of the book with id 1. the request body must contain the fields as JSON
+  DELETE books/<id>  # deletes the book with id
+
+You can also send OPTIONS and HEAD to both resources.
+
+= MongoDB integration
+
+If you want persistent resources that are stored in MongoDB, just use normal Mongoid objects, and include PowerNap::Resource::Mongoid to turn them into resources:
+
+  class Book
+    include PowerNap::Resource::Mongoid
+    include Mongoid::Document
+  
+    field :title, type: String
+  end
+
+= Is that all?
+
+No, there is some more cool stuff in PowerNap. This documentation will grow as the project goes on.
