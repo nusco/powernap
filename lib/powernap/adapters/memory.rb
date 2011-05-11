@@ -11,22 +11,13 @@ module PowerNap
 
       attr_reader :fields
 
-      def id
-        # FIXME: remove
-        @fields['_id']
-      end
-
       def initialize(json)
         fields = JSON.parse(json)
-        fields.each_key do |f|
-          if BasicObject.instance_methods.include? f
-            raise "Reserved field name: \"#{f}\""
-          end
-          if super.respond_to? f
-            raise "Field \"#{f}\" clashes with method #{f}() in #{self.class}. Maybe try inheriting from BasicObject?"
-          end
+        @fields = {'id' => self.class.next_id}.merge(fields)
+        @fields.each_key do |f|
+          raise "Reserved field name: \"#{f}\"." if BasicObject.instance_methods.include? f
+          raise "Field \"#{f}\" clashes with #{self.class}##{f}()." if super.respond_to? f
         end
-        @fields = {'_id' => self.class.next_id}.merge(fields)
       end
 
       def get
@@ -38,7 +29,7 @@ module PowerNap
       end
 
       def delete
-        self.class.resources.delete fields['_id']
+        self.class.resources.delete fields['id']
       end
     
       def method_missing(name, *args)
@@ -63,8 +54,7 @@ module PowerNap
         end
       
         def [](id)
-          raise Sinatra::NotFound unless resources.has_key? id
-          resources[id]
+          resources[id] or raise Sinatra::NotFound
         end
   
         def delete_all
@@ -77,8 +67,7 @@ module PowerNap
 
         def next_id
           @next_id ||= 0
-          @next_id += 1
-          "#{@next_id}"
+          (@next_id += 1).to_s
         end
       end
     end

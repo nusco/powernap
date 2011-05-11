@@ -9,54 +9,54 @@ require 'forwardable'
 module PowerNap
   module ConfigurationHelpers
     def resource(res, args = {})
-      res.url = args[:at_url] if args[:at_url]
+      url = args[:at_url] || res.name.downcase.pluralize
       
-      get "/#{res.url}/:id.:extension" do |id, extension|
+      get "/#{url}/:id.:extension" do |id, extension|
         access res do
           res[id].get
         end
       end
 
-      post "/#{res.url}/:id" do |id|
+      post "/#{url}/:id" do |id|
         access res do
           res[id].post(request.body.read)
         end
       end
 
-      put "/#{res.url}/:id" do |id|
+      put "/#{url}/:id" do |id|
          access res do
           res[id].put(request.body.read)
           headers 'Allow' => res.allow_header if request.env['HTTP_ALLOW']
         end
       end
 
-      delete "/#{res.url}/:id" do |id|
+      delete "/#{url}/:id" do |id|
         access res do
           res[id].delete
         end
       end
 
-      options "/#{res.url}/:id" do |id|
+      options "/#{url}/:id" do |id|
         access res do
           res[id] # check that the resource does exist
           headers 'Allow' => res.allow_header
         end
       end
 
-      get "/#{res.url}.:extension" do |extension|
+      get "/#{url}.:extension" do |extension|
         access res do
            res.get.to_json
         end
       end
 
-      post "/#{res.url}" do
+      post "/#{url}" do
         access res do
           status 201
           res.post(request.body.read)
         end
       end
 
-      options "/#{res.url}" do
+      options "/#{url}" do
         access res do
           headers 'Allow' => "GET, POST"
         end
@@ -83,7 +83,7 @@ module PowerNap
     def access(res)
       yield
     rescue NoMethodError
-      [405, {'Allow' => res.allow_header}, []]      
+      [405, {'Allow' => res.allow_header}, []]
     end
   end
   
