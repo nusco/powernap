@@ -32,7 +32,7 @@ shared_examples_for 'any HTTP resource' do
     last_response.status.should == 200
   end
 
-  describe 'accessed with GET' do      
+  describe 'when accessed with GET' do      
     before :each do
       post '/books', '{"title": "Metaprogramming Ruby"}'
       @id = last_response.body
@@ -79,7 +79,7 @@ shared_examples_for 'any HTTP resource' do
     end
   end
 
-  describe "accessed with POST" do
+  describe 'when accessed with POST' do
     it 'should do whatever the post method specifies' do
       post '/authors', '{"name": "Nusco"}'
       id = last_response.body
@@ -110,7 +110,7 @@ shared_examples_for 'any HTTP resource' do
     end
   end    
 
-  describe 'accessed with PUT' do
+  describe 'when accessed with PUT' do
     before :each do
       post '/books', '{"title": "Metaprogramming Ruby"}'
       @id = last_response.body
@@ -151,7 +151,7 @@ shared_examples_for 'any HTTP resource' do
     end
   end
 
-  describe 'accessed with DELETE' do
+  describe 'when accessed with DELETE' do
     before :each do
       post '/books', '{"title": "Metaprogramming Ruby"}'
       @id = last_response.body
@@ -184,7 +184,7 @@ shared_examples_for 'any HTTP resource' do
     end
   end
 
-  describe 'accessed with OPTIONS' do
+  describe 'when accessed with OPTIONS' do
     before :each do
       post '/authors', '{"name": "Paolo Perrotta"}'
       @id = last_response.body
@@ -216,7 +216,7 @@ shared_examples_for 'any HTTP resource' do
     end
   end
 
-  describe 'accessed with HEAD' do      
+  describe 'when accessed with HEAD' do      
     before :each do
       post '/books', '{"title": "Metaprogramming Ruby"}'
       @id = last_response.body
@@ -279,7 +279,7 @@ shared_examples_for 'any HTTP resource collection' do
     end
   end
 
-  describe 'accessed with GET' do
+  describe 'when accessed with GET' do
     before :each do
       post '/books', '{"title": "Metaprogramming Ruby"}'
     end
@@ -309,8 +309,34 @@ shared_examples_for 'any HTTP resource collection' do
       last_response.content_length.should == last_response.body.size
     end
   end
+  
+  describe 'when accessed with POST' do
+    it 'should create a new resource and return its id in the body' do
+      post '/books', '{"title": "Metaprogramming Ruby"}'
+      id = last_response.body
+      get "/books/#{id}"
+      last_response.status.should == 200
+    end
 
-  describe "accessed with HEAD" do
+    it 'should return 201 for Created' do
+      post '/books', '{"title": "Metaprogramming Ruby"}'
+      last_response.status.should == 201
+    end
+  end
+
+  describe 'when accessed with OPTIONS' do
+    it 'should only support GET and POST' do
+      options "/books"
+      last_response.headers['Allow'].should == 'GET, POST'
+    end
+
+    it 'should return 200 for OK' do
+      options "/books"
+      last_response.status.should == 200
+    end
+  end
+
+  describe 'when accessed with HEAD' do
       before :each do
         post '/books', '{"title": "Metaprogramming Ruby"}'
       end
@@ -337,31 +363,5 @@ shared_examples_for 'any HTTP resource collection' do
         head "/books.doc"
         last_response.status.should == 415
       end
-  end
-  
-  describe "accessed with POST" do
-    it 'should create a new resource and return its id in the body' do
-      post '/books', '{"title": "Metaprogramming Ruby"}'
-      id = last_response.body
-      get "/books/#{id}"
-      last_response.status.should == 200
-    end
-
-    it 'should return 201 for Created' do
-      post '/books', '{"title": "Metaprogramming Ruby"}'
-      last_response.status.should == 201
-    end
-  end
-
-  describe "accessed with OPTIONS" do
-    it 'should only support GET and POST' do
-      options "/books"
-      last_response.headers['Allow'].should == 'GET, POST'
-    end
-
-    it 'should return 200 for OK' do
-      options "/books"
-      last_response.status.should == 200
-    end
   end
 end
