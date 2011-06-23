@@ -11,7 +11,7 @@ Not yet. Just clone this repo.
 *Step One* - define a Ruby class:
 
   class Book
-    include PowerNap::Resource::Memory
+    include PowerNap::Resource
   end
 
 *Step Two* - create an application for your resource:
@@ -84,19 +84,6 @@ If you want your own behavior for a verb, just define or override it:
   end
 
 Feel free to come up with your own overrides for HTTP verbs, but don't break PowerNap's expectations. GET on a resource is always supposed to return the resource as JSON, PUT takes JSON and returns an id in the response body, and so on.
-
-= MongoDB integration
-
-If you want persistent resources that are stored in MongoDB, just use normal Mongoid objects, and include PowerNap::Resource::Mongoid to turn them into resources:
-
-  class Book
-    include PowerNap::Resource::Mongoid
-    include Mongoid::Document
-  
-    field :title, type: String
-  end
-
-_todo_
 
 = License
 

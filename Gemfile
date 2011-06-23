@@ -1,8 +1,8 @@
 source :rubygems
 
 gem 'sinatra'
-gem 'mongoid'
-gem 'bson_ext'
+gem 'activesupport'
+gem 'i18n'
 
 group :test do
   gem 'rspec'

@@ -1,6 +1,8 @@
 require 'sinatra/base'
 require 'erb'
 
+require 'active_support/inflector'
+
 class HttpException < Exception; end
 
 require 'forwardable'
@@ -9,7 +11,7 @@ require 'forwardable'
 module PowerNap
   module ConfigurationHelpers
     def resource(res, args = {})
-      url = args[:at_url] || res.name.downcase.pluralize
+      url = args[:at_url] || ActiveSupport::Inflector.pluralize(res.name.downcase)
       
       get "/#{url}/:id.:extension" do |id, extension|
         access res do

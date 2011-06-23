@@ -1,5 +1,5 @@
 require './lib/powernap'
-require './spec/memory/service'
+require './spec/service'
 app = PowerNap.build_application do
         resource Book
         resource Author
