@@ -1,4 +1,4 @@
-require 'powernap/representations'
+require 'powernap/rack/representations'
 
 require 'rack/lint'
 require 'rack/test'

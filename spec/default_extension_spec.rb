@@ -1,4 +1,4 @@
-require 'powernap/default_extension'
+require 'powernap/rack/default_extension'
 
 require 'rack/test'
 ENV['RACK_ENV'] = 'test'

@@ -72,10 +72,10 @@ module PowerNap
     require 'rack/content_length'
     use Rack::ContentLength
 
-    require_relative 'default_extension'
+    require_relative 'rack/default_extension'
     use Rack::DefaultExtension
 
-    require_relative 'representations'
+    require_relative 'rack/representations'
     use Rack::Representations
 
     options %r{\*} do; end
