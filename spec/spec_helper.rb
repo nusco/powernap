@@ -80,7 +80,7 @@ shared_examples_for 'any HTTP resource' do
   end
 
   describe 'when accessed with POST' do
-    it 'should do whatever the post method specifies' do
+    it 'should do whatever the POST specifies' do
       post '/authors', '{"name": "Nusco"}'
       id = last_response.body
       post "/authors/#{id}", 'Hello'

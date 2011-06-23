@@ -26,7 +26,7 @@ describe Rack::DefaultExtension do
     last_response.body.should == '/resources/tests/a_test.h2_o.json' 
   end
 
-  it "should work with HEAD requests" do
+  it "should respond to HEAD requests" do
     head '/x'
     last_response.body.should == '/x.json' 
   end
