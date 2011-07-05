@@ -1,9 +1,6 @@
 require 'spec_helper'
 require_relative 'service'
 
-puts 'Running in-memory tests...'
-
-
 describe 'an HTTP resource' do
   include Rack::Test::Methods
   

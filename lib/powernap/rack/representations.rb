@@ -13,7 +13,7 @@ module Rack
     def call(env)
       status, headers, body = @app.call(env)
       return [status, headers, body] unless ['GET', 'HEAD'].include?(env['REQUEST_METHOD'])
-
+            
       # FIXME: default behavior if no extension...?
       return [status, headers, body] unless env['PATH_INFO'] =~ /\.([a-z0-9]*)$/
       extension = $1

@@ -1,7 +1,7 @@
 require 'rack/utils'
 
 module Rack
-  # Adds a default .json extension to GET and HEAD request unless
+  # Adds a default .json extension to GET and HEAD requests unless
   # the requested path already has an extension.
   class DefaultExtension
     def initialize(app)

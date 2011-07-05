@@ -31,12 +31,12 @@ describe Rack::Representations do
     last_response.body.should == 'message: hello'
   end
 
-  it "should return a 415 for unsupported formats in a GET" do
+  it "should return a 415 for Unsupported Media Type in a GET" do
     get '/my_resource.xml'
     last_response.status.should == 415
   end
 
-  it "should return a 415 for unsupported formats in a HEAD" do
+  it "should return a 415 for Unsupported Media Type in a HEAD" do
     head '/my_resource.xml'
     last_response.status.should == 415
   end

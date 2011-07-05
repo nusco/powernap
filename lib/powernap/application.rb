@@ -69,15 +69,14 @@ module PowerNap
   class Application < Sinatra::Base
     register ConfigurationHelpers
     
-    require 'rack/content_length'
-    use Rack::ContentLength
-
     require_relative 'rack/default_extension'
     use Rack::DefaultExtension
 
     require_relative 'rack/representations'
     use Rack::Representations
 
+    use Rack::ContentLength
+    
     options %r{\*} do; end
 
     private
