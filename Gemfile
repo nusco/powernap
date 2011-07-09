@@ -10,4 +10,5 @@ group :test do
   gem 'rspec'
   gem "rack-test"
   gem 'nokogiri'
+  gem 'dirty'
 end
