@@ -66,7 +66,7 @@ If you want to limit the HTTP verbs that a resource allows, just make them priva
   class Author
     include PowerNap::Resource::Memory
     
-    private :delete
+    private :DELETE
   end
 
 If you want your own behavior for a verb, just define or override it:
@@ -74,7 +74,7 @@ If you want your own behavior for a verb, just define or override it:
   class Library
     include PowerNap::Resource::Memory
   
-    def post
+    def POST
       "my own POST"
     end
 
@@ -83,7 +83,7 @@ If you want your own behavior for a verb, just define or override it:
     end
   end
 
-Feel free to come up with your own overrides for HTTP verbs, but don't break PowerNap's expectations. GET on a resource is always supposed to return the resource as JSON, PUT takes JSON and returns an id in the response body, and so on.
+Feel free to come up with your own overrides for HTTP verbs. Just respect PowerNap's basic expectations: GET on a resource is always supposed to return the resource as JSON, PUT takes JSON and returns an id in the response body, and so on.
 
 = License
 

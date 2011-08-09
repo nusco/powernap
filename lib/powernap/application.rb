@@ -15,26 +15,26 @@ module PowerNap
       
       get "/#{url}/:id.:extension" do |id, extension|
         access res do
-          res[id].get
+          res[id].GET
         end
       end
 
       post "/#{url}/:id" do |id|
         access res do
-          res[id].post(request.body.read)
+          res[id].POST(request.body.read)
         end
       end
 
       put "/#{url}/:id" do |id|
          access res do
-          res[id].put(request.body.read)
+          res[id].PUT(request.body.read)
           headers 'Allow' => res.allow_header if request.env['HTTP_ALLOW']
         end
       end
 
       delete "/#{url}/:id" do |id|
         access res do
-          res[id].delete
+          res[id].DELETE
         end
       end
 
@@ -47,14 +47,14 @@ module PowerNap
 
       get "/#{url}.:extension" do |extension|
         access res do
-           res.get.to_json
+           res.GET.to_json
         end
       end
 
       post "/#{url}" do
         access res do
           status 201
-          res.post(request.body.read)
+          res.POST(request.body.read)
         end
       end
 

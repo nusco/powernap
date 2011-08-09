@@ -5,9 +5,9 @@ end
 class Author
   include PowerNap::Resource
 
-  private :get, :put
+  private :GET, :PUT
   
-  def post(body)
+  def POST(body)
     "#{body}, #{fields['name']}!"
   end
 end

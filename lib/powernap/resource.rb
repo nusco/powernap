@@ -16,15 +16,15 @@ module PowerNap
       end
     end
 
-    def get
+    def GET
       @fields.to_json
     end
 
-    def put(resource)
+    def PUT(resource)
       @fields = JSON.parse(resource).to_hash
     end
 
-    def delete
+    def DELETE
       self.class.resources.delete fields['id']
     end
   
@@ -39,11 +39,11 @@ module PowerNap
     end
   
     module ClassMethods
-      def get
+      def GET
         resources.values.map {|r| r.fields }
       end
 
-      def post(json)
+      def POST(json)
         resource = new(json)
         resources[resource.id] = resource
         resource.id
@@ -67,7 +67,7 @@ module PowerNap
       end
 
       def allow_header
-        allowed = [:get, :post, :put, :delete] & public_instance_methods
+        allowed = [:GET, :POST, :PUT, :DELETE] & public_instance_methods
         allowed.map(&:upcase).join(', ')
       end
     end

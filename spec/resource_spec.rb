@@ -7,14 +7,14 @@ end
 describe PowerNap::Resource do
   describe 'the resource class' do
     it 'should post a new resource' do
-      id = Cat.post '{"name": "Felix"}'
+      id = Cat.POST '{"name": "Felix"}'
       Cat[id].name.should == 'Felix'
     end
   
     it 'should get all resources' do
-      Cat.post '{"name": "Felix"}'
-      Cat.post '{"name": "Grunt"}'
-      all_cats = Cat.get
+      Cat.POST '{"name": "Felix"}'
+      Cat.POST '{"name": "Grunt"}'
+      all_cats = Cat.GET
       all_cats[1]['name'] == 'Grunt'
     end
   
@@ -23,7 +23,7 @@ describe PowerNap::Resource do
     end
 
     it 'should delete all resources' do
-      Cat.post '{"name": "Felix"}'
+      Cat.POST '{"name": "Felix"}'
       Cat.delete_all
       Cat.resources.should be_empty
     end
@@ -36,20 +36,20 @@ describe PowerNap::Resource do
   it 'should be built with either JSON or a hash' do
     other_resource = Cat.new({:name => 'Felix', :age => 2})
     other_resource.id = @r.id
-    other_resource.get.should == @r.get
+    other_resource.GET.should == @r.GET
   end
   
   it 'should retrieve a resource with get() by default' do
-    JSON.parse(@r.get)['name'].should == 'Felix'
+    JSON.parse(@r.GET)['name'].should == 'Felix'
   end
   
   it 'should update a resource with put(json) by default' do
-    @r.put '{"name": "Felix", "age": 3}'
+    @r.PUT '{"name": "Felix", "age": 3}'
     @r.age.should == 3
   end
   
   it 'should remove a resource with delete() by default' do
-    @r.delete
+    @r.DELETE
     Cat.resources.should be_empty
   end
   
