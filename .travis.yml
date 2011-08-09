@@ -1,0 +1,5 @@
+rvm: 1.9.2
+script: "bundle exec rake test"
+notifications:
+  recipients:
+    - paolo.nusco.perrotta@gmail.com
