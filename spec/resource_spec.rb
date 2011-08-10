@@ -34,13 +34,13 @@ describe PowerNap::Resource do
   end
   
   it 'should be built with either JSON or a hash' do
-    other_resource = Cat.new({:name => 'Felix', :age => 2})
+    other_resource = Cat.new({"name" => 'Felix', "age" => 2})
     other_resource.id = @r.id
     other_resource.GET.should == @r.GET
   end
   
   it 'should retrieve a resource with get() by default' do
-    JSON.parse(@r.GET)['name'].should == 'Felix'
+    @r.GET['name'].should == 'Felix'
   end
   
   it 'should update a resource with put(json) by default' do

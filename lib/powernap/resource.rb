@@ -15,7 +15,7 @@ module PowerNap
     end
 
     def GET
-      fields.to_json
+      fields
     end
 
     def PUT(resource)
