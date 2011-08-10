@@ -2,6 +2,8 @@ PowerNap is a zero-friction REST framework for web services.
 
 _PowerNap and this documentation are still work in progress. Don't expect anything unless you're prepared to go through a few hoops._
 
+![Build Status](http://travis-ci.org/nusco/powernap.png Build Status left)
+
 = Installing PowerNap
 
 Not yet. Just clone this repo.
