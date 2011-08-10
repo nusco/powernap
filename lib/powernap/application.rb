@@ -9,16 +9,7 @@ module PowerNap
       
       get "/#{url}/:id.:extension" do |id, extension|
         access res do
-          case extension
-          when 'html'
-            "<p>#{res[id].GET.to_json}</p>"
-          when 'txt'
-            res[id].GET.to_s
-          when 'json'
-            res[id].GET.to_json
-          else
-            415
-          end
+          convert res[id].GET, extension
         end
       end
 
@@ -50,16 +41,7 @@ module PowerNap
 
       get "/#{url}.:extension" do |extension|
         access res do
-          case extension
-          when 'html'
-            "<p>#{res.GET.to_json}</p>"
-          when 'txt'
-            res.GET.to_s
-          when 'json'
-            res.GET.to_json
-          else
-            415
-          end
+          convert res.GET, extension
         end
       end
 
@@ -95,6 +77,19 @@ module PowerNap
     options %r{\*} do; end
 
     private
+    
+    def convert(res, extension)
+      case extension
+      when 'html'
+        "<p>#{res.to_json}</p>"
+      when 'txt'
+        res.to_s
+      when 'json'
+        res.to_json
+      else
+        415
+      end
+    end
     
     def access(res)
       yield
