@@ -7,9 +7,18 @@ module PowerNap
     def resource(res, args = {})
       url = args[:at_url] || ActiveSupport::Inflector.pluralize(res.name.downcase)
       
-      get "/#{url}/:id.:extension" do |id, _|
+      get "/#{url}/:id.:extension" do |id, extension|
         access res do
-          res[id].GET.to_json
+          case extension
+          when 'html'
+            "<p>#{res[id].GET.to_json}</p>"
+          when 'txt'
+            res[id].GET.to_s
+          when 'json'
+            res[id].GET.to_json
+          else
+            415
+          end
         end
       end
 
@@ -39,9 +48,18 @@ module PowerNap
         end
       end
 
-      get "/#{url}.:extension" do |_|
+      get "/#{url}.:extension" do |extension|
         access res do
-           res.GET.to_json
+          case extension
+          when 'html'
+            "<p>#{res.GET.to_json}</p>"
+          when 'txt'
+            res.GET.to_s
+          when 'json'
+            res.GET.to_json
+          else
+            415
+          end
         end
       end
 
@@ -71,9 +89,6 @@ module PowerNap
     
     require_relative 'rack/default_extension'
     use Rack::DefaultExtension
-
-    require_relative 'rack/representations'
-    use Rack::Representations
 
     use Rack::ContentLength
     

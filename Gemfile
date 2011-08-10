@@ -1,6 +1,6 @@
 source :rubygems
 
-gem 'rack', '=1.2.2' # bug with 1.3. find out why.
+gem 'rack'
 gem 'sinatra'
 gem 'activesupport'
 gem 'i18n'

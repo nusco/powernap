@@ -1,3 +1,5 @@
+require 'json'
+
 module PowerNap
   module Resource
     def self.included(base)
