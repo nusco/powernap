@@ -1,11 +1,5 @@
 require 'sinatra/base'
-require 'erb'
-
 require 'active_support/inflector'
-
-class HttpException < Exception; end
-
-require 'forwardable'
 
 # The HTTP entry point to resources
 module PowerNap
@@ -13,7 +7,7 @@ module PowerNap
     def resource(res, args = {})
       url = args[:at_url] || ActiveSupport::Inflector.pluralize(res.name.downcase)
       
-      get "/#{url}/:id.:extension" do |id, extension|
+      get "/#{url}/:id.:extension" do |id, _|
         access res do
           res[id].GET
         end
@@ -45,7 +39,7 @@ module PowerNap
         end
       end
 
-      get "/#{url}.:extension" do |extension|
+      get "/#{url}.:extension" do |_|
         access res do
            res.GET.to_json
         end
@@ -55,6 +49,12 @@ module PowerNap
         access res do
           status 201
           res.POST(request.body.read)
+        end
+      end
+
+      delete "/#{url}" do
+        access res do
+          res.DELETE
         end
       end
 
@@ -89,6 +89,6 @@ module PowerNap
   end
   
   def self.build_application(&configuration)
-    Class.new(PowerNap::Application, &configuration).new
+    c = Class.new(PowerNap::Application, &configuration).new
   end
 end

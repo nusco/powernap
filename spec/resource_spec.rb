@@ -24,7 +24,7 @@ describe PowerNap::Resource do
 
     it 'should delete all resources' do
       Cat.POST '{"name": "Felix"}'
-      Cat.delete_all
+      Cat.DELETE
       Cat.resources.should be_empty
     end
   end
@@ -77,20 +77,12 @@ describe PowerNap::Resource do
     lambda { @r.unknown }.should raise_error(NoMethodError)
   end
   
-  it 'should fail fast if a field name conflicts with a method in Object' do
-    lambda {
-      Cat.new('{"name": "Felix", "clone": "Boom!"}')
-    }.should raise_error do |e|
-      e.message.should == 'Field "clone" clashes with method clone() in Cat.'
-    end
-  end
-  
   it 'should fail fast if a field name conflicts with an existing method' do
     Cat.send :define_method, :a_method do; end
     lambda {
       Cat.new('{"name": "Felix", "a_method": "Boom!"}')
     }.should raise_error do |e|
-      e.message.should == 'Reserved field name: "instance_eval".'
+      e.message.should == 'Field "instance_eval" clashes with the method of the same name.'
     end
   end
 end

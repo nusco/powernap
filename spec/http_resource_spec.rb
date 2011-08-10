@@ -13,8 +13,8 @@ describe 'an HTTP resource' do
   end
   
   before :each do
-    Book.delete_all
-    Author.delete_all
+    Book.DELETE
+    Author.DELETE
   end
   
   it 'should return 405 for Method Not Allowed' do
@@ -313,6 +313,11 @@ describe 'an HTTP resource collection' do
       get "/books"
       last_response.content_length.should == last_response.body.size
     end
+
+    it 'should return 404 for resource type Not Found' do
+      get "/dogs"
+      last_response.status.should == 404
+    end
   end
   
   describe 'when accessed with POST' do
@@ -327,6 +332,25 @@ describe 'an HTTP resource collection' do
       post '/books', '{"title": "Metaprogramming Ruby"}'
       last_response.status.should == 201
     end
+
+    it 'should return 404 for resource type Not Found' do
+      post "/dogs", '{"title": "Metaprogramming Ruby"}'
+      last_response.status.should == 404
+    end
+  end
+  
+  describe 'when accessed with DELETE' do
+    it 'should delete all resources' do
+      post '/books', '{"title": "Metaprogramming Ruby"}'
+      delete '/books'
+      get '/books'
+      JSON.parse(last_response.body).should be_empty
+    end
+
+    it 'should return 404 for resource type Not Found' do
+      delete "/dogs"
+      last_response.status.should == 404
+    end
   end
 
   describe 'when accessed with OPTIONS' do
@@ -338,6 +362,11 @@ describe 'an HTTP resource collection' do
     it 'should return 200 for OK' do
       options "/books"
       last_response.status.should == 200
+    end
+
+    it 'should return 404 for resource type Not Found' do
+      options "/dogs"
+      last_response.status.should == 404
     end
   end
 
@@ -367,6 +396,11 @@ describe 'an HTTP resource collection' do
       it 'should return 415 for Unsupported Media Type' do
         head "/books.doc"
         last_response.status.should == 415
+      end
+
+      it 'should return 404 for resource type Not Found' do
+        head "/dogs"
+        last_response.status.should == 404
       end
   end
 end

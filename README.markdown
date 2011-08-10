@@ -31,6 +31,7 @@ OK, now you can talk to your app. It talks JSON by default. It contains two reso
   GET  books/        # retrieve a list of all books
   POST books/        # insert a new book. the request body must contain the book as JSON.
                      # the response body contains the id of the new resource
+  DELETE books/      # deletes all books
 
   GET    books/<id>  # returns the book in the response body (as JSON)
   PUT    books/<id>  # changes the fields of the book with id 1. the request body must contain the fields as JSON
