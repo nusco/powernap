@@ -1,5 +1,6 @@
-rvm: 1.9.2
+rvm:
+  - 1.9.2
+  - 1.9.3
+  - jruby
+  - rbx-2.0
 script: "bundle exec rake test"
-notifications:
-  recipients:
-    - paolo.nusco.perrotta@gmail.com
