@@ -1,4 +1,3 @@
-# Class methods for all resources
 module PowerNap
   module Resource
     def self.included(base)
@@ -11,7 +10,7 @@ module PowerNap
       fields = JSON.parse(fields) unless fields.class == Hash
       @fields = {'id' => self.class.next_id}.merge(fields)
       @fields.each_key do |f|
-        raise "Reserved field name: \"#{f}\"." if BasicObject.instance_methods.include? f
+        raise "Reserved field name: \"#{f}\"." if methods.include? f.to_sym
         raise "Field \"#{f}\" clashes with #{self.class}##{f}()." if super.respond_to? f
       end
     end
@@ -67,8 +66,7 @@ module PowerNap
       end
 
       def allow_header
-        allowed = [:GET, :POST, :PUT, :DELETE] & public_instance_methods
-        allowed.map(&:upcase).join(', ')
+        ([:GET, :POST, :PUT, :DELETE] & public_instance_methods).join(', ')
       end
     end
   end

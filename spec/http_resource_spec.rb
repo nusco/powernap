@@ -121,7 +121,7 @@ describe 'an HTTP resource' do
       @id = last_response.body
     end
   
-    it 'should update an existing resource' do
+    it 'should update a resource' do
       put "/books/#{@id}", '{"title": "Rails Recipes"}'
       get "/books/#{@id}"
       JSON.parse(last_response.body)['title'].should == "Rails Recipes"

@@ -85,9 +85,10 @@ describe PowerNap::Resource do
     end
   end
   
-  it 'should fail fast if a field name conflicts with a method in BasicObject' do
+  it 'should fail fast if a field name conflicts with an existing method' do
+    Cat.send :define_method, :a_method do; end
     lambda {
-      Cat.new('{"name": "Felix", "instance_eval": "Boom!"}')
+      Cat.new('{"name": "Felix", "a_method": "Boom!"}')
     }.should raise_error do |e|
       e.message.should == 'Reserved field name: "instance_eval".'
     end
