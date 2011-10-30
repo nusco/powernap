@@ -4,10 +4,7 @@ class Cat
   include PowerNap::Resource
   
   has_field :name
-  attr_accessor :name
-  
   has_field :age
-  attr_accessor :age
 end
 
 describe PowerNap::Resource do
