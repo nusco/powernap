@@ -1,6 +1,7 @@
 class Book
   include PowerNap::Resource
 
+  has_field :title
   attr_accessor :title
 end
 
@@ -9,6 +10,7 @@ class Author
 
   private :GET, :PUT
 
+  has_field :name
   attr_accessor :name
   
   def POST(body)
@@ -19,5 +21,6 @@ end
 class Review
   include PowerNap::Resource
   
-  attr_accessor :text
+  has_field :text
+  attr_accessor :test
 end
