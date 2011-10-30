@@ -22,5 +22,5 @@ class Review
   include PowerNap::Resource
   
   has_field :text
-  attr_accessor :test
+  attr_accessor :text
 end

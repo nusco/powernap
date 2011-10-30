@@ -4,35 +4,37 @@ module PowerNap
   module Resource
     def self.included(base)
       base.extend CollectionOfResources
+      class << base
+        def fields
+          @fields ||= ['id']
+        end
+        
+        def has_field(field)
+          fields << field.to_s
+        end
+      end
     end
 
-    attr_reader :fields
+    # TODO: fall back on using object_id() by default, and allow the user to implement her own id()
     attr_reader :id
     
     def initialize(fields)
       @id = self.class.next_id
-      @fields = fields
-      fields.each do |field, value|
-        send "#{field}=", value
-      end
+      fields.each {|field, value| send "#{field}=", value }
       # TODO: I should call super() to avoid overwriting existing base class initialize() here
       #       write a test for this
     end
 
     def GET
-      result = { 'id' => id }
-      @fields.keys.each do |field|
+      self.class.fields.inject({}) do |result, field|
         result[field] = send field
+        result
       end
-      result
     end
 
     def PUT(resource)
       fields = JSON.parse(resource).to_hash
-      @fields = fields
-      fields.each do |field, value|
-        send "#{field}=", value
-      end
+      fields.each {|field, value| send "#{field}=", value }
     end
 
     def DELETE
@@ -41,7 +43,7 @@ module PowerNap
   
     module CollectionOfResources
       def GET
-        resources.values.map {|resource| resource.fields }
+        resources.values.map {|resource| resource.GET }
       end
 
       def POST(json)
