@@ -6,11 +6,11 @@ module PowerNap
       base.extend CollectionOfResources
       class << base
         def fields
-          @fields ||= ['id']
+          @fields ||= [:id]
         end
         
         def has_field(field)
-          fields << field.to_s
+          fields << field.to_sym
         end
       end
     end

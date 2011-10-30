@@ -40,11 +40,11 @@ describe PowerNap::Resource do
   end
   
   it 'should retrieve a resource with GET() by default' do
-    @r.GET['name'].should == 'Felix'
+    @r.GET[:name].should == 'Felix'
   end
   
   it 'the representation of the resource should include its id' do
-    @r.GET['id'].should == @r.id
+    @r.GET[:id].should == @r.id
   end
   
   it 'should update a resource with PUT(json) by default' do
