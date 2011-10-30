@@ -12,7 +12,6 @@ module PowerNap
         def exposes(*field_names)
           field_names.each do |field|
             fields << field.to_sym
-            # TODO: make compatible with ruby 1.8
             define_method field do
               instance_variable_get "@#{field}"
             end unless instance_methods.include?(field)
