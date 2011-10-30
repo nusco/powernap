@@ -39,21 +39,21 @@ describe PowerNap::Resource do
     other_resource.GET.should == @r.GET
   end
   
-  it 'should retrieve a resource with get() by default' do
+  it 'should retrieve a resource with GET() by default' do
     @r.GET['name'].should == 'Felix'
   end
   
-  it 'should update a resource with put(json) by default' do
+  it 'should update a resource with PUT(json) by default' do
     @r.PUT '{"name": "Felix", "age": 3}'
     @r.age.should == 3
   end
   
-  it 'should remove a resource with delete() by default' do
+  it 'should remove a resource with DELETE() by default' do
     @r.DELETE
     Cat.resources.should be_empty
   end
   
-  it 'should not have a default post()' do
+  it 'should not have a default POST()' do
     @r.methods.should_not include :post
   end
   
