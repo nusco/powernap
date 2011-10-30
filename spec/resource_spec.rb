@@ -3,7 +3,13 @@ require 'spec_helper'
 class Cat
   include PowerNap::Resource
   
-  exposes :name, :age
+  def genus; 'Felis'; end
+  
+  def tag=(value)
+    @tag = "TAG:#{value}"
+  end
+
+  exposes :name, :age, :genus, :tag
 end
 
 describe PowerNap::Resource do
@@ -73,8 +79,14 @@ describe PowerNap::Resource do
     @r.age.should == 3
   end
   
-  it 'should behave as normal if you ask for something that is not a field' do
-    lambda { @r.unknown }.should raise_error(NoMethodError)
+  it 'should not overwrite existing field readers' do
+    resource = Cat.new({"genus" => "Canis"})
+    resource.genus.should == "Felis"
+  end
+  
+  it 'should not overwrite existing field writers' do
+    resource = Cat.new({"tag" => "my_cat"})
+    resource.tag.should == "TAG:my_cat"
   end
   
   # TODO: decide what happens when you try to create a resource with an undeclared field

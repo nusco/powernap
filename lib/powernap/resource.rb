@@ -12,8 +12,13 @@ module PowerNap
         def exposes(*field_names)
           field_names.each do |field|
             fields << field.to_sym
-            # TODO: check that we're not overwriting existing accessor methods here
-            attr_accessor field
+            # TODO: make compatible with ruby 1.8
+            define_method field do
+              instance_variable_get "@#{field}"
+            end unless instance_methods.include?(field)
+            define_method "#{field}=" do |value|
+              instance_variable_set "@#{field}", value
+            end unless instance_methods.include?("#{field}=".to_sym)
           end
         end
       end
