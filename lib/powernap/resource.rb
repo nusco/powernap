@@ -9,10 +9,12 @@ module PowerNap
           @fields ||= [:id]
         end
         
-        def has_field(field)
-          fields << field.to_sym
-          # TODO: check that we're not overwriting existing accessor methods here
-          attr_accessor field
+        def exposes(*field_names)
+          field_names.each do |field|
+            fields << field.to_sym
+            # TODO: check that we're not overwriting existing accessor methods here
+            attr_accessor field
+          end
         end
       end
     end

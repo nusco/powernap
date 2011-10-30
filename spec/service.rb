@@ -1,13 +1,13 @@
 class Book
   include PowerNap::Resource
 
-  has_field :title
+  exposes :title
 end
 
 class Author
   include PowerNap::Resource
 
-  has_field :name
+  exposes :name
   
   private :GET, :PUT
 
@@ -19,5 +19,5 @@ end
 class Review
   include PowerNap::Resource
   
-  has_field :text
+  exposes :text
 end

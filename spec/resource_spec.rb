@@ -3,8 +3,7 @@ require 'spec_helper'
 class Cat
   include PowerNap::Resource
   
-  has_field :name
-  has_field :age
+  exposes :name, :age
 end
 
 describe PowerNap::Resource do
