@@ -22,17 +22,17 @@ module PowerNap
         end
       end
     end
-
-    # TODO: fall back on using object_id() by default, and allow the user to implement her own id()
-    attr_reader :id
     
     def initialize(fields)
-      @id = self.class.next_id
       fields.each {|field, value| send "#{field}=", value }
       # TODO: I should call super() to avoid overwriting existing base class initialize() here
       #       write a test for this
     end
 
+    def id
+      object_id.to_s
+    end
+    
     def GET
       self.class.fields.inject({}) do |result, field|
         result[field] = send field
@@ -66,11 +66,6 @@ module PowerNap
 
       def resources
         @resources ||= {}
-      end
-
-      def next_id
-        @next_id ||= 0
-        (@next_id += 1).to_s
       end
   
       def [](id)

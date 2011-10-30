@@ -18,16 +18,12 @@ describe PowerNap::Resource do
       id = Cat.POST '{"name": "Felix"}'
       Cat[id].name.should == 'Felix'
     end
-  
+
     it 'should get all resources' do
       Cat.POST '{"name": "Felix"}'
       Cat.POST '{"name": "Grunt"}'
       all_cats = Cat.GET
       all_cats[1]['name'] == 'Grunt'
-    end
-  
-    it 'should have a serial id' do
-      (Cat.next_id.to_i + 1).should == Cat.next_id.to_i
     end
 
     it 'should delete all resources' do
@@ -63,11 +59,9 @@ describe PowerNap::Resource do
     @r.methods.should_not include :post
   end
   
-  it 'should have a serial id' do
-    id      = Cat.new({}).id
-    next_id = Cat.new({}).id
-    
-    next_id.to_i.should == id.to_i + 1
+  it 'should use object_id as its id' do
+    resource = Cat.new({})
+    resource.id.should == resource.object_id.to_s
   end
   
   it 'should have field readers' do
