@@ -7,44 +7,45 @@ module PowerNap
     end
 
     attr_reader :fields
-
+    attr_reader :id
+    
     def initialize(fields)
-      fields = JSON.parse(fields) unless fields.class == Hash
-      @fields = {'id' => self.class.next_id}.merge(fields)
-      @fields.each_key do |f|
-        raise "Field \"#{f}\"  clashes with the method of the same name" if methods.include? f.to_sym
+      @id = self.class.next_id
+      @fields = fields
+      fields.each do |field, value|
+        send "#{field}=", value
       end
+      # TODO: I should call super() to avoid overwriting existing base class initialize() here
+      #       write a test for this
     end
 
     def GET
-      fields
+      result = { 'id' => id }
+      @fields.keys.each do |field|
+        result[field] = send field
+      end
+      result
     end
 
     def PUT(resource)
-      @fields = JSON.parse(resource).to_hash
+      fields = JSON.parse(resource).to_hash
+      @fields = fields
+      fields.each do |field, value|
+        send "#{field}=", value
+      end
     end
 
     def DELETE
-      self.class.resources.delete fields['id']
-    end
-  
-    def method_missing(name, *args)
-      field = name.to_s.gsub(/=$/, '')
-      super unless fields.has_key? field
-      if name.to_s.end_with? '='
-        fields[field] = args[0]
-      else
-        fields[field]
-      end
+      self.class.resources.delete id
     end
   
     module CollectionOfResources
       def GET
-        resources.values.map {|r| r.fields }
+        resources.values.map {|resource| resource.fields }
       end
 
       def POST(json)
-        resource = new(json)
+        resource = new(JSON.parse json)
         resources[resource.id] = resource
         resource.id
       end

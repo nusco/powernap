@@ -2,6 +2,8 @@ require 'spec_helper'
 
 class Cat
   include PowerNap::Resource
+  
+  attr_accessor :name, :age
 end
 
 describe PowerNap::Resource do
@@ -30,17 +32,15 @@ describe PowerNap::Resource do
   end
 
   before :each do
-    @r = Cat.new('{"name": "Felix", "age": 2}')
-  end
-  
-  it 'should be built with either JSON or a hash' do
-    other_resource = Cat.new({"name" => 'Felix', "age" => 2})
-    other_resource.id = @r.id
-    other_resource.GET.should == @r.GET
+    @r = Cat.new({"name" => 'Felix', "age" => 2})
   end
   
   it 'should retrieve a resource with GET() by default' do
     @r.GET['name'].should == 'Felix'
+  end
+  
+  it 'the representation of the resource should include its id' do
+    @r.GET['id'].should == @r.id
   end
   
   it 'should update a resource with PUT(json) by default' do
@@ -58,8 +58,8 @@ describe PowerNap::Resource do
   end
   
   it 'should have a serial id' do
-    id      = Cat.new("{}").id
-    next_id = Cat.new("{}").id
+    id      = Cat.new({}).id
+    next_id = Cat.new({}).id
     
     next_id.to_i.should == id.to_i + 1
   end
@@ -77,12 +77,5 @@ describe PowerNap::Resource do
     lambda { @r.unknown }.should raise_error(NoMethodError)
   end
   
-  it 'should fail fast if a field name conflicts with an existing method' do
-    Cat.send :define_method, :a_method do; end
-    lambda {
-      Cat.new('{"name": "Felix", "a_method": "Boom!"}')
-    }.should raise_error do |e|
-      e.message.should == 'Field "instance_eval" clashes with the method of the same name.'
-    end
-  end
+  # TODO: decide what happens when you try to create a resource with an undeclared field
 end
