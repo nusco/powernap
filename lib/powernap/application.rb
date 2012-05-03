@@ -47,8 +47,7 @@ module PowerNap
 
       post "/#{url}" do
         access res do
-#          status 201
-          status 202
+          status 201
           res.POST(request.body.read)
         end
       end
