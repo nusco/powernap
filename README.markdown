@@ -57,7 +57,6 @@ _todo_
 
 Create a resource with a piece of JSON:
 
-
 Resources are open structures, so you can access their fields through regular method accessors.
 
 Feel free to add your business logics to PowerNap resources. Anemic objects are sad.
