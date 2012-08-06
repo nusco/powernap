@@ -1,11 +1,13 @@
+require 'bundler/setup'
+
 desc "Start app"
 task :start do
   system "bundle exec rackup"
 end
 
+require 'rspec/core/rake_task'
+
 desc "run specs"
-task :test do
-  system "bundle exec rspec spec"
-end
+RSpec::Core::RakeTask.new
 
 task :default => 'test'
