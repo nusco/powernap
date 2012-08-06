@@ -5,9 +5,7 @@ gem 'sinatra'
 gem 'activesupport'
 gem 'i18n'
 
-gem 'json', :platform => 'mri_18'
-gem 'json', :platform => 'rbx'
-gem 'json', :platform => 'jruby'
+gem 'json', :platforms => ['mri_18', 'rbx', 'jruby']
 
 group :test do
   gem 'rake'
