@@ -28,7 +28,7 @@ module PowerNap
 
       delete "/#{url}/:id" do |id|
         access res do
-         # res[id].DELETE
+         res[id].DELETE
         end
       end
 
