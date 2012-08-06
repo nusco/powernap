@@ -9,6 +9,5 @@ group :test do
   gem 'rake'
   gem 'rspec'
   gem "rack-test"
-  gem 'nokogiri'
   gem 'dirty'
 end
