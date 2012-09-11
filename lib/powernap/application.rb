@@ -1,5 +1,5 @@
-require 'sinatra/base'
-require 'active_support/inflector'
+require "sinatra/base"
+require "active_support/inflector"
 
 # The HTTP entry point to resources
 module PowerNap
@@ -22,7 +22,7 @@ module PowerNap
       put "/#{url}/:id" do |id|
          access res do
           res[id].PUT(request.body.read)
-          headers 'Allow' => res.allow_header if request.env['HTTP_ALLOW']
+          headers "Allow" => res.allow_header if request.env["HTTP_ALLOW"]
         end
       end
 
@@ -35,7 +35,7 @@ module PowerNap
       options "/#{url}/:id" do |id|
         access res do
           res[id] # check that the resource does exist
-          headers 'Allow' => res.allow_header
+          headers "Allow" => res.allow_header
         end
       end
 
@@ -60,7 +60,7 @@ module PowerNap
 
       options "/#{url}" do
         access res do
-          headers 'Allow' => "GET, POST"
+          headers "Allow" => "GET, POST"
         end
       end
     end
@@ -69,7 +69,7 @@ module PowerNap
   class Application < Sinatra::Base
     register ConfigurationHelpers
     
-    require_relative 'rack/default_extension'
+    require_relative "rack/default_extension"
     use Rack::DefaultExtension
 
     use Rack::ContentLength
@@ -80,11 +80,11 @@ module PowerNap
     
     def convert(res, extension)
       case extension
-      when 'html'
+      when "html"
         "<p>#{res.to_json}</p>"
-      when 'txt'
+      when "txt"
         res.to_s
-      when 'json'
+      when "json"
         res.to_json
       else
         415
@@ -94,7 +94,7 @@ module PowerNap
     def access(res)
       yield
     rescue NoMethodError
-      [405, {'Allow' => res.allow_header}, []]
+      [405, {"Allow" => res.allow_header}, []]
     end
   end
   

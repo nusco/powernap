@@ -1,4 +1,4 @@
-require 'json'
+require "json"
 
 module PowerNap
   module Resource
@@ -73,7 +73,7 @@ module PowerNap
       end
 
       def allow_header
-        ([:GET, :POST, :PUT, :DELETE] & public_instance_methods).join(', ')
+        ([:GET, :POST, :PUT, :DELETE] & public_instance_methods).join(", ")
       end
     end
   end
