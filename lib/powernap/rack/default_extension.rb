@@ -1,4 +1,4 @@
-require 'rack/utils'
+require "rack/utils"
 
 module Rack
   # Adds a default .json extension to GET and HEAD requests unless
@@ -9,9 +9,9 @@ module Rack
     end
 
     def call(env)
-      if ['GET', 'HEAD'].include?(env['REQUEST_METHOD'])
-        unless env['PATH_INFO'] =~ /\.[a-z0-9]*$/
-          env['PATH_INFO'] = "#{env['PATH_INFO']}.json"
+      if ["GET", "HEAD"].include?(env["REQUEST_METHOD"])
+        unless env["PATH_INFO"] =~ /\.[a-z0-9]*$/
+          env["PATH_INFO"] = "#{env["PATH_INFO"]}.json"
         end
       end
       @app.call(env)
