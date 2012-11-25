@@ -1,6 +1,8 @@
-PowerNap is a zero-friction REST framework for web services.
+== PowerNap
 
-_PowerNap and this documentation are still work in progress. Don't expect anything unless you're prepared to go through a few hoops._
+PowerNap is a low-friction REST framework for web services.
+
+_PowerNap and this documentation are still work in progress, and mainly a pet project I use to try out new ideas. Don't build your next world-changing social network on this._
 
 ![Build Status](https://secure.travis-ci.org/nusco/powernap.png)
 ![Dependency Status](https://gemnasium.com/rails/rails.png?travis)
