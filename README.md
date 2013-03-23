@@ -2,7 +2,7 @@
 
 PowerNap is a low-friction REST framework for web services.
 
-_PowerNap and this documentation are a permanent work in progress, and mainly a pet project I use to try out new ideas. Don't build your next world-changing social network on this._
+_PowerNap is a toy project I use to try out a few ideas. It's just an experiment. Don't build your next world-changing social network on this._
 
 * [![Build Status](https://travis-ci.org/nusco/powernap.png)](https://travis-ci.org/nusco/powernap)
 * [![Dependencies Status](https://gemnasium.com/nusco/powernap.png?travis)](https://gemnasium.com/nusco/powernap)
